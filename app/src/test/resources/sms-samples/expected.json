@@ -1,32 +1,32 @@
 {
   "_rules": [
     "The parser only has to return what Codka speaks: provider, currency, the amount and the sender's name.",
-    "amount is a whole number, rounded half up: .5 or more goes up, less than .5 is dropped ($12.5 -> 13, $7.5 -> 8, $45.25 -> 45, $60.4 -> 60, SLSH 9,500.05 -> 9500).",
+    "amount is exactly what the SMS says, never rounded: only thousands commas are removed ($12.5 -> \"12.5\", $45.25 -> \"45.25\", SLSH2,000 -> \"2000\"). It is a string so no decimal is lost, and Codka speaks it exactly like that.",
     "source 'real' = a real SMS with fake names and numbers swapped in. 'generated' = made from the same real format with other values; replace these with real samples from the market when you have them."
   ],
   "samples": [
-    { "file": "zaad-usd-001.txt",    "source": "real",      "provider": "ZAAD",   "currency": "USD",  "amount": 120,     "senderName": "AXMED CALI FAARAX" },
-    { "file": "zaad-usd-002.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 5,       "senderName": "CUMAR XASAN DUALE" },
-    { "file": "zaad-usd-003.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 350,     "senderName": "SAHRA MAXAMED GUULED" },
-    { "file": "zaad-usd-004.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 13,      "senderName": "YUUSUF CABDI NUUR" },
-    { "file": "zaad-usd-005.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 45,      "senderName": "AAMINA CALI XIRSI" },
+    { "file": "zaad-usd-001.txt",    "source": "real",      "provider": "ZAAD",   "currency": "USD",  "amount": "120",     "senderName": "AXMED CALI FAARAX" },
+    { "file": "zaad-usd-002.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": "5",       "senderName": "CUMAR XASAN DUALE" },
+    { "file": "zaad-usd-003.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": "350",     "senderName": "SAHRA MAXAMED GUULED" },
+    { "file": "zaad-usd-004.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": "12.5",      "senderName": "YUUSUF CABDI NUUR" },
+    { "file": "zaad-usd-005.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": "45.25",      "senderName": "AAMINA CALI XIRSI" },
 
-    { "file": "zaad-slsh-001.txt",   "source": "real",      "provider": "ZAAD",   "currency": "SLSH", "amount": 2000,    "senderName": "FAADUMO XASAN JAAMAC" },
-    { "file": "zaad-slsh-002.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 10000,   "senderName": "XAWO AXMED BOOS" },
-    { "file": "zaad-slsh-003.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 500,     "senderName": "CALI JAAMAC CILMI" },
-    { "file": "zaad-slsh-004.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 150000,  "senderName": "NIMCO XUSEEN WARSAME" },
-    { "file": "zaad-slsh-005.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 1250000, "senderName": "MAXAMUUD SICIID FAARAX" },
+    { "file": "zaad-slsh-001.txt",   "source": "real",      "provider": "ZAAD",   "currency": "SLSH", "amount": "2000",    "senderName": "FAADUMO XASAN JAAMAC" },
+    { "file": "zaad-slsh-002.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": "10000",   "senderName": "XAWO AXMED BOOS" },
+    { "file": "zaad-slsh-003.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": "500",     "senderName": "CALI JAAMAC CILMI" },
+    { "file": "zaad-slsh-004.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": "150000",  "senderName": "NIMCO XUSEEN WARSAME" },
+    { "file": "zaad-slsh-005.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": "1250000", "senderName": "MAXAMUUD SICIID FAARAX" },
 
-    { "file": "edahab-usd-001.txt",  "source": "real",      "provider": "EDAHAB", "currency": "USD",  "amount": 100,     "senderName": "MAXAMED CUMAR WARSAME" },
-    { "file": "edahab-usd-002.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 5,       "senderName": "KHADRA CABDIRAXMAAN XAAJI" },
-    { "file": "edahab-usd-003.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 20,      "senderName": "AXMED YUUSUF CAWIL" },
-    { "file": "edahab-usd-004.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 8,       "senderName": "FARXIYA MAXAMED JIBRIIL" },
-    { "file": "edahab-usd-005.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 60,      "senderName": "CABDIRAHMAAN CALI GEEDI" },
+    { "file": "edahab-usd-001.txt",  "source": "real",      "provider": "EDAHAB", "currency": "USD",  "amount": "100",     "senderName": "MAXAMED CUMAR WARSAME" },
+    { "file": "edahab-usd-002.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": "5",       "senderName": "KHADRA CABDIRAXMAAN XAAJI" },
+    { "file": "edahab-usd-003.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": "20",      "senderName": "AXMED YUUSUF CAWIL" },
+    { "file": "edahab-usd-004.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": "7.5",       "senderName": "FARXIYA MAXAMED JIBRIIL" },
+    { "file": "edahab-usd-005.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": "60.4",      "senderName": "CABDIRAHMAAN CALI GEEDI" },
 
-    { "file": "edahab-slsh-001.txt", "source": "real",      "provider": "EDAHAB", "currency": "SLSH", "amount": 25000,   "senderName": "HODAN YUUSUF CALI" },
-    { "file": "edahab-slsh-002.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 5000,    "senderName": "SAFIYA XASAN MAXAMUUD" },
-    { "file": "edahab-slsh-003.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 100000,  "senderName": "IBRAAHIM CUMAR AADAN" },
-    { "file": "edahab-slsh-004.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 2500,    "senderName": "LUUL CABDI XUSEEN" },
-    { "file": "edahab-slsh-005.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 50000,   "senderName": "BASHIIR AXMED DIRIR" }
+    { "file": "edahab-slsh-001.txt", "source": "real",      "provider": "EDAHAB", "currency": "SLSH", "amount": "25000",   "senderName": "HODAN YUUSUF CALI" },
+    { "file": "edahab-slsh-002.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": "5000",    "senderName": "SAFIYA XASAN MAXAMUUD" },
+    { "file": "edahab-slsh-003.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": "100000",  "senderName": "IBRAAHIM CUMAR AADAN" },
+    { "file": "edahab-slsh-004.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": "2500",    "senderName": "LUUL CABDI XUSEEN" },
+    { "file": "edahab-slsh-005.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": "50000",   "senderName": "BASHIIR AXMED DIRIR" }
   ]
 }
