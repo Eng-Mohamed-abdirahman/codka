@@ -8,6 +8,10 @@ captures/
 .externalNativeBuild/
 .cxx/
 
+
+
+.docs
+
 # ==========================
 # Local config (machine-specific, may hold paths or secrets)
 # ==========================
