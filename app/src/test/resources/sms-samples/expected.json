@@ -1,0 +1,53 @@
+{
+  "_note": "What the parser must return for each sample. Amounts are decimal strings on purpose: balances can have 4 decimals (Zaad USD), so the money scale is still to be decided. Times are local Somaliland time (UTC+3).",
+  "samples": [
+    {
+      "file": "zaad-usd-001.txt",
+      "provider": "ZAAD",
+      "currency": "USD",
+      "amount": "120",
+      "senderName": "AXMED CALI FAARAX",
+      "senderPhone": "+252633000001",
+      "senderLast4": "0001",
+      "balanceAfter": "150.0049",
+      "transactionId": "16100000001",
+      "receivedAt": "2026-11-05T19:36:37"
+    },
+    {
+      "file": "zaad-slsh-001.txt",
+      "provider": "ZAAD",
+      "currency": "SLSH",
+      "amount": "2000",
+      "senderName": "FAADUMO XASAN JAAMAC",
+      "senderPhone": "+252634000002",
+      "senderLast4": "0002",
+      "balanceAfter": "9500.05",
+      "transactionId": "16100000002",
+      "receivedAt": "2026-11-10T21:49:16"
+    },
+    {
+      "file": "edahab-usd-001.txt",
+      "provider": "EDAHAB",
+      "currency": "USD",
+      "amount": "100",
+      "senderName": "MAXAMED CUMAR WARSAME",
+      "senderPhone": "+252654000003",
+      "senderLast4": "0003",
+      "balanceAfter": "140.1",
+      "transactionId": "PP261005.1914.10000003",
+      "receivedAt": "2026-10-05T19:14:00"
+    },
+    {
+      "file": "edahab-slsh-001.txt",
+      "provider": "EDAHAB",
+      "currency": "SLSH",
+      "amount": "25000",
+      "senderName": "HODAN YUUSUF CALI",
+      "senderPhone": "+252654000004",
+      "senderLast4": "0004",
+      "balanceAfter": "31250.8",
+      "transactionId": "PP261106.1652.10000004",
+      "receivedAt": "2026-11-06T16:52:00"
+    }
+  ]
+}
