@@ -2,6 +2,7 @@
   "_rules": [
     "The parser only has to return what Codka speaks: provider, currency, the amount and the sender's name.",
     "amount is exactly what the SMS says, never rounded: only thousands commas are removed ($12.5 -> \"12.5\", $45.25 -> \"45.25\", SLSH2,000 -> \"2000\"). It is a string so no decimal is lost, and Codka speaks it exactly like that.",
+    "Decimals are spoken as dollars and cents ('doolar iyo senti'), with the decimal part as cents: $7.5 -> 'toddoba doolar iyo konton senti' (7 + 50), $45.25 -> 45 doolar iyo 25 senti, $60.4 -> 60 doolar iyo 40 senti. Whole amounts have no 'iyo ... senti' part.",
     "source 'real' = a real SMS with fake names and numbers swapped in. 'generated' = made from the same real format with other values; replace these with real samples from the market when you have them."
   ],
   "samples": [
