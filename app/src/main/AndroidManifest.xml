@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Task 07 spike: receive incoming SMS. Codka never sends SMS. -->
+    <!-- Receive incoming SMS (task 09). Codka never sends or reads old SMS. -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <uses-feature
@@ -26,7 +26,7 @@
 
         <!-- Only the system (holding BROADCAST_SMS) can send SMS_RECEIVED to this receiver. -->
         <receiver
-            android:name=".sms.SpikeSmsReceiver"
+            android:name=".sms.SmsReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS"
             tools:ignore="ExportedReceiver">
