@@ -47,5 +47,7 @@ dependencies {
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.params)
+    // Real org.json for unit tests (Android's built-in one is only a stub on the computer)
+    testImplementation(libs.org.json)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
