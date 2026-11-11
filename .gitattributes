@@ -1,2 +1,6 @@
 # Keep SMS samples byte-exact (real SMS use LF line breaks)
 app/src/test/resources/sms-samples/*.txt text eol=lf
+
+# Gradle wrapper scripts must keep their line endings
+gradlew text eol=lf
+*.bat text eol=crlf
