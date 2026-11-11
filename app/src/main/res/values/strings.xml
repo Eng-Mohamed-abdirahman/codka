@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Somali is the default language. All UI text lives here, never hard-coded. -->
+    <string name="app_name">Codka</string>
+    <string name="home_ready">Codka waa diyaar.</string>
+</resources>
