@@ -46,5 +46,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.platform.launcher)
 }

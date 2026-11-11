@@ -3,4 +3,12 @@
     <!-- Somali is the default language. All UI text lives here, never hard-coded. -->
     <string name="app_name">Codka</string>
     <string name="home_ready">Codka waa diyaar.</string>
+
+    <!-- Task 07 spike screen (temporary) -->
+    <string name="spike_title">Tijaabada SMS</string>
+    <string name="spike_permission_needed">Codka wuxuu u baahan yahay oggolaanshaha SMS.</string>
+    <string name="spike_allow_sms">Oggolow SMS</string>
+    <string name="spike_permission_ok">SMS waa la oggolaaday. Xir app-ka, qufuli shaashadda, oo dir fariin lacag.</string>
+    <string name="spike_log_empty">Weli fariin lama helin.</string>
+    <string name="spike_clear_log">Tirtir</string>
 </resources>
