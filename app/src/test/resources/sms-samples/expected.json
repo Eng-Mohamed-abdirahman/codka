@@ -1,53 +1,32 @@
 {
-  "_note": "What the parser must return for each sample. Amounts are decimal strings on purpose: balances can have 4 decimals (Zaad USD), so the money scale is still to be decided. Times are local Somaliland time (UTC+3).",
+  "_rules": [
+    "The parser only has to return what Codka speaks: provider, currency, the amount and the sender's name.",
+    "amount is a whole number: decimals are dropped, never rounded ($12.5 -> 12, $7.5 -> 7, SLSH 9,500.05 -> 9500).",
+    "source 'real' = a real SMS with fake names and numbers swapped in. 'generated' = made from the same real format with other values; replace these with real samples from the market when you have them."
+  ],
   "samples": [
-    {
-      "file": "zaad-usd-001.txt",
-      "provider": "ZAAD",
-      "currency": "USD",
-      "amount": "120",
-      "senderName": "AXMED CALI FAARAX",
-      "senderPhone": "+252633000001",
-      "senderLast4": "0001",
-      "balanceAfter": "150.0049",
-      "transactionId": "16100000001",
-      "receivedAt": "2026-11-05T19:36:37"
-    },
-    {
-      "file": "zaad-slsh-001.txt",
-      "provider": "ZAAD",
-      "currency": "SLSH",
-      "amount": "2000",
-      "senderName": "FAADUMO XASAN JAAMAC",
-      "senderPhone": "+252634000002",
-      "senderLast4": "0002",
-      "balanceAfter": "9500.05",
-      "transactionId": "16100000002",
-      "receivedAt": "2026-11-10T21:49:16"
-    },
-    {
-      "file": "edahab-usd-001.txt",
-      "provider": "EDAHAB",
-      "currency": "USD",
-      "amount": "100",
-      "senderName": "MAXAMED CUMAR WARSAME",
-      "senderPhone": "+252654000003",
-      "senderLast4": "0003",
-      "balanceAfter": "140.1",
-      "transactionId": "PP261005.1914.10000003",
-      "receivedAt": "2026-10-05T19:14:00"
-    },
-    {
-      "file": "edahab-slsh-001.txt",
-      "provider": "EDAHAB",
-      "currency": "SLSH",
-      "amount": "25000",
-      "senderName": "HODAN YUUSUF CALI",
-      "senderPhone": "+252654000004",
-      "senderLast4": "0004",
-      "balanceAfter": "31250.8",
-      "transactionId": "PP261106.1652.10000004",
-      "receivedAt": "2026-11-06T16:52:00"
-    }
+    { "file": "zaad-usd-001.txt",    "source": "real",      "provider": "ZAAD",   "currency": "USD",  "amount": 120,     "senderName": "AXMED CALI FAARAX" },
+    { "file": "zaad-usd-002.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 5,       "senderName": "CUMAR XASAN DUALE" },
+    { "file": "zaad-usd-003.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 350,     "senderName": "SAHRA MAXAMED GUULED" },
+    { "file": "zaad-usd-004.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 12,      "senderName": "YUUSUF CABDI NUUR" },
+    { "file": "zaad-usd-005.txt",    "source": "generated", "provider": "ZAAD",   "currency": "USD",  "amount": 45,      "senderName": "AAMINA CALI XIRSI" },
+
+    { "file": "zaad-slsh-001.txt",   "source": "real",      "provider": "ZAAD",   "currency": "SLSH", "amount": 2000,    "senderName": "FAADUMO XASAN JAAMAC" },
+    { "file": "zaad-slsh-002.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 10000,   "senderName": "XAWO AXMED BOOS" },
+    { "file": "zaad-slsh-003.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 500,     "senderName": "CALI JAAMAC CILMI" },
+    { "file": "zaad-slsh-004.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 150000,  "senderName": "NIMCO XUSEEN WARSAME" },
+    { "file": "zaad-slsh-005.txt",   "source": "generated", "provider": "ZAAD",   "currency": "SLSH", "amount": 1250000, "senderName": "MAXAMUUD SICIID FAARAX" },
+
+    { "file": "edahab-usd-001.txt",  "source": "real",      "provider": "EDAHAB", "currency": "USD",  "amount": 100,     "senderName": "MAXAMED CUMAR WARSAME" },
+    { "file": "edahab-usd-002.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 5,       "senderName": "KHADRA CABDIRAXMAAN XAAJI" },
+    { "file": "edahab-usd-003.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 20,      "senderName": "AXMED YUUSUF CAWIL" },
+    { "file": "edahab-usd-004.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 7,       "senderName": "FARXIYA MAXAMED JIBRIIL" },
+    { "file": "edahab-usd-005.txt",  "source": "generated", "provider": "EDAHAB", "currency": "USD",  "amount": 60,      "senderName": "CABDIRAHMAAN CALI GEEDI" },
+
+    { "file": "edahab-slsh-001.txt", "source": "real",      "provider": "EDAHAB", "currency": "SLSH", "amount": 25000,   "senderName": "HODAN YUUSUF CALI" },
+    { "file": "edahab-slsh-002.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 5000,    "senderName": "SAFIYA XASAN MAXAMUUD" },
+    { "file": "edahab-slsh-003.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 100000,  "senderName": "IBRAAHIM CUMAR AADAN" },
+    { "file": "edahab-slsh-004.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 2500,    "senderName": "LUUL CABDI XUSEEN" },
+    { "file": "edahab-slsh-005.txt", "source": "generated", "provider": "EDAHAB", "currency": "SLSH", "amount": 50000,   "senderName": "BASHIIR AXMED DIRIR" }
   ]
 }
