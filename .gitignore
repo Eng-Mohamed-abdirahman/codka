@@ -1,0 +1,51 @@
+# ==========================
+# Gradle / build output
+# ==========================
+.gradle/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ==========================
+# Local config (machine-specific, may hold paths or secrets)
+# ==========================
+local.properties
+*.env
+.env*
+
+# ==========================
+# Signing keys — never commit
+# ==========================
+*.jks
+*.keystore
+keystore.properties
+
+# ==========================
+# Release output
+# ==========================
+*.apk
+*.aab
+app/release/
+output-metadata.json
+
+# ==========================
+# IDEs & editors
+# ==========================
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ==========================
+# Logs & OS files
+# ==========================
+*.log
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Kotlin
+# ==========================
+.kotlin/
