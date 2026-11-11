@@ -8,9 +8,10 @@ captures/
 .externalNativeBuild/
 .cxx/
 
-
-
-.docs
+# ==========================
+# Local docs (kept on this computer only, not on GitHub)
+# ==========================
+docs/
 
 # ==========================
 # Local config (machine-specific, may hold paths or secrets)
