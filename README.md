@@ -22,15 +22,27 @@ As a result:
 
 Codka listens for payment SMS in the background, even when the app is closed. For each payment it:
 
-1. **Reads it aloud in Somali**: the amount, the currency and the last 4 digits of the sender's number, spoken twice.
+1. **Reads it aloud in Somali**: the amount, the currency and the **sender's name**, spoken twice.
 2. **Checks that it's real**: it confirms the SMS came from the official Zaad / eDahab sender, and that the new balance matches the last one plus the amount.
 3. **Warns out loud** if the message looks fake or suspicious.
 4. **Saves it in a history list**, so any payment can be replayed with one tap.
 
 Example of what the phone says:
 
-> *"Lacag ayaa kuu timid: shan iyo labaatan doolar, ka timid lambarka 4 5 6 7."*
-> ("Money has arrived: twenty-five dollars, from the number ending 4567.")
+> *"Lacag ayaa kuu timid: shan iyo labaatan doolar, waxaa soo diray Axmed Cali."*
+> ("Money has arrived: twenty-five dollars, sent by Axmed Cali.")
+
+The sender's name is taken from the payment SMS itself. If the SMS has no name, Codka reads the last 4 digits of the sender's number instead:
+
+> *"…ka timid lambarka 4 5 6 7."* ("…from the number ending 4567.")
+
+### How the name is spoken
+
+Numbers and fixed phrases are pre-recorded clips, but names can't all be recorded in advance. The plan is:
+
+1. **Saved customers** (after the MVP): the seller (or a helper) records a regular customer's name once, and Codka plays that recording every time that number pays.
+2. **New senders**: the name from the SMS is spoken with the phone's text-to-speech voice. Somali spelling is very regular, so it can be read letter-by-sound.
+3. **No name, or no usable voice on the phone**: Codka falls back to the last 4 digits of the number.
 
 Everything runs **on the phone**. There's no internet, no account and no server, and the SMS never leaves the device.
 
@@ -39,13 +51,13 @@ Everything runs **on the phone**. There's no internet, no account and no server,
 | Feature | Description |
 |---|---|
 | 📩 SMS listener | Picks up Zaad and eDahab payment SMS in the background |
-| 🧮 Parser | Reads the amount, currency (USD / SLSH), sender and balance |
+| 🧮 Parser | Reads the amount, currency (USD / SLSH), sender name and number, and balance |
 | 🗣️ Somali voice | Offline voice built from recorded Somali clips, not robotic TTS |
 | 🚨 Fake-SMS warning | Checks the sender ID and the balance math |
 | 🔁 Repeat button | One big button that replays the last payment |
 | 📜 History | A list of past payments, each one replayable |
 
-**Planned for later:** a spoken end-of-day total, an "expected amount" check before the customer pays, and saved names for regular customers.
+**Planned for later:** a spoken end-of-day total, an "expected amount" check before the customer pays, and recorded names for regular customers.
 
 **Out of scope:** iPhone (iOS blocks reading SMS), feature phones, sending money, accounts and logins, cloud sync, and languages other than Somali.
 
