@@ -2,8 +2,7 @@ package com.codka.app.sms
 
 import com.codka.app.sms.PaymentSmsFilter.Provider
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -16,27 +15,33 @@ class PaymentSmsFilterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["001", "002", "003", "004", "005"])
-    fun `every Zaad sample is a Zaad payment`(n: String) {
+    fun `every Zaad sample comes from Zaad`(n: String) {
         listOf("zaad-usd-$n.txt", "zaad-slsh-$n.txt").forEach { file ->
-            val sms = sample(file)
-            assertTrue(PaymentSmsFilter.isPayment(sms), file)
-            assertEquals(Provider.ZAAD, PaymentSmsFilter.providerOf(sms), file)
+            assertEquals(Provider.ZAAD, PaymentSmsFilter.providerOf(sample(file)), file)
         }
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["001", "002", "003", "004", "005"])
-    fun `every eDahab sample is an eDahab payment`(n: String) {
+    fun `every eDahab sample comes from eDahab`(n: String) {
         listOf("edahab-usd-$n.txt", "edahab-slsh-$n.txt").forEach { file ->
-            val sms = sample(file)
-            assertTrue(PaymentSmsFilter.isPayment(sms), file)
-            assertEquals(Provider.EDAHAB, PaymentSmsFilter.providerOf(sms), file)
+            assertEquals(Provider.EDAHAB, PaymentSmsFilter.providerOf(sample(file)), file)
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "zaad-slsh-sent-person.txt", "zaad-slsh-topup.txt",
+            "zaad-exchange-slsh.txt", "zaad-exchange-usd.txt"
+        ]
+    )
+    fun `Zaad non-payments still count as Zaad, so debug builds log them`(file: String) {
+        assertEquals(Provider.ZAAD, PaymentSmsFilter.providerOf(sample("not-payment/$file")))
+    }
+
     @Test
-    fun `ordinary SMS is not a payment`() {
-        assertFalse(PaymentSmsFilter.isPayment("Salaan, sidee tahay? Berri ayaan imanayaa."))
-        assertFalse(PaymentSmsFilter.isPayment("Waxaad $50 ka heshay saaxiibkaa"))
+    fun `ordinary SMS is from neither`() {
+        assertNull(PaymentSmsFilter.providerOf(sample("not-payment/ordinary.txt")))
     }
 }

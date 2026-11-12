@@ -6,6 +6,7 @@ import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.codka.app.parser.ParsedPayment
 
 /**
  * What Codka does with a payment SMS. For now: log it and beep.
@@ -16,10 +17,18 @@ object PaymentHandler {
     private const val BEEP_MS = 700
 
     /** Called on the main thread. Calls [done] when the work is finished. */
-    fun onPayment(context: Context, sms: IncomingSms, receivedAtMillis: Long, done: () -> Unit) {
-        val provider = PaymentSmsFilter.providerOf(sms.body)
+    fun onPayment(
+        context: Context,
+        sms: IncomingSms,
+        payment: ParsedPayment,
+        receivedAtMillis: Long,
+        done: () -> Unit
+    ) {
         val delayMs = receivedAtMillis - sms.sentAtMillis
-        val line = "PAYMENT ${provider?.name} from '${sms.sender}' delay=${delayMs}ms"
+        // No sender name or phone in the log: the amount is enough to check it worked.
+        val line =
+            "PAYMENT ${payment.provider} ${payment.currency} ${payment.amount} " +
+                "from '${sms.sender}' delay=${delayMs}ms"
         Log.i(TAG, line)
         SpikeLog.add(context, line)
         beep(done)

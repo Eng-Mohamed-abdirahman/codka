@@ -5,6 +5,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
@@ -18,6 +19,24 @@ class PaymentParserTest {
         requireNotNull(javaClass.classLoader?.getResource("sms-samples/$name")) {
             "$name missing"
         }.readText()
+
+    /** Money sent, top-ups, exchange, ordinary SMS: Codka must stay silent for all of them. */
+    @TestFactory
+    fun `ignores every not-payment sample`(): List<DynamicTest> {
+        val folder =
+            File(
+                requireNotNull(
+                    javaClass.classLoader?.getResource("sms-samples/not-payment")
+                ).toURI()
+            )
+        val files = folder.listFiles { f -> f.name.endsWith(".txt") }.orEmpty().sortedBy { it.name }
+        assertTrue(files.size >= 8, "not-payment samples missing")
+        return files.map { file ->
+            DynamicTest.dynamicTest(file.name) {
+                assertNull(parser.parse(file.readText()), "${file.name} must not be a payment")
+            }
+        }
+    }
 
     @TestFactory
     fun `parses every sample exactly as expected json says`(): List<DynamicTest> {
