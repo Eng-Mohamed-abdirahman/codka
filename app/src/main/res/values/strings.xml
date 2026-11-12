@@ -11,4 +11,12 @@
     <string name="spike_permission_ok">SMS waa la oggolaaday. Xir app-ka, qufuli shaashadda, oo dir fariin lacag.</string>
     <string name="spike_log_empty">Weli fariin lama helin.</string>
     <string name="spike_clear_log">Tirtir</string>
+
+    <!-- Background setup: without these, the phone stops Codka from getting the SMS -->
+    <string name="setup_title">Si Codka u shaqeeyo marka app-ka xiran yahay:</string>
+    <string name="setup_battery_needed">1. Batteriga: u oggolow Codka inuu shaqeeyo isagoo xiran.</string>
+    <string name="setup_battery_button">Fur batteriga</string>
+    <string name="setup_battery_ok">✓ Batteriga waa diyaar.</string>
+    <string name="setup_autostart_needed">2. App Launch: ka raadi Codka oo shid.</string>
+    <string name="setup_autostart_button">Fur App Launch</string>
 </resources>

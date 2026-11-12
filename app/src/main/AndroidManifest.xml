@@ -4,6 +4,9 @@
 
     <!-- Task 07 spike: receive incoming SMS. Codka never sends SMS. -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!-- Shows the "let Codka run in the background" dialog. Without it, phones like
+         Infinix freeze Codka and drop the payment SMS. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <uses-feature
         android:name="android.hardware.telephony"
