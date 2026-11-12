@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.codka.app.R
+import com.codka.app.sms.BackgroundSetup
 import com.codka.app.sms.SpikeLog
 import kotlinx.coroutines.delay
 
@@ -47,10 +48,15 @@ fun HomeScreen() {
             hasPermission = granted
         }
 
-    // Refresh the log every 2 seconds while the screen is open.
+    var batteryOk by remember { mutableStateOf(BackgroundSetup.isBatteryUnrestricted(context)) }
+    val isTranssion = remember { BackgroundSetup.isTranssion() }
+
+    // Refresh every 2 seconds while the screen is open (also picks up the battery
+    // setting when the user comes back from Settings).
     LaunchedEffect(Unit) {
         while (true) {
             log = SpikeLog.read(context)
+            batteryOk = BackgroundSetup.isBatteryUnrestricted(context)
             delay(2_000)
         }
     }
@@ -67,6 +73,24 @@ fun HomeScreen() {
             Text(stringResource(R.string.spike_permission_needed))
             Button(onClick = { requestPermission.launch(Manifest.permission.RECEIVE_SMS) }) {
                 Text(stringResource(R.string.spike_allow_sms))
+            }
+        }
+
+        // Without these, phones like Infinix freeze Codka and drop the payment SMS.
+        Text(stringResource(R.string.setup_title), style = MaterialTheme.typography.titleMedium)
+        if (batteryOk) {
+            Text(stringResource(R.string.setup_battery_ok))
+        } else {
+            Text(stringResource(R.string.setup_battery_needed))
+            Button(onClick = { BackgroundSetup.openBatterySetting(context) }) {
+                Text(stringResource(R.string.setup_battery_button))
+            }
+        }
+        // Android can't tell us whether App Launch is on, so the button always shows.
+        if (isTranssion) {
+            Text(stringResource(R.string.setup_autostart_needed))
+            OutlinedButton(onClick = { BackgroundSetup.openAutoStartSetting(context) }) {
+                Text(stringResource(R.string.setup_autostart_button))
             }
         }
 
