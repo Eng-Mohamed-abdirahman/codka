@@ -33,6 +33,7 @@ class PaymentStore(private val dao: PaymentDao) {
                     amountMinor = minor,
                     senderName = payment.senderName,
                     senderPhone = payment.senderPhone,
+                    balanceAfter = payment.balance,
                     receivedAt = receivedAt,
                     isSuspicious = isSuspicious,
                     reason = reason,

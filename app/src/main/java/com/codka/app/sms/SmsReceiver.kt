@@ -6,15 +6,15 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.provider.Telephony
 import android.util.Log
-import com.codka.app.parser.AppParser
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Task 09: Codka's SMS listener. Android starts it for every incoming SMS, even when the app
  * is closed, the screen is locked or the phone has just restarted (proven in the task 07 spike).
  *
- * Every SMS goes to the payment parser. Only money *received* on Zaad / eDahab gets through;
- * money sent, top-ups, exchange and every other SMS are dropped right here: not logged in
- * release builds, not stored, nothing about them is kept.
+ * Only Zaad / eDahab SMS go on to the [PaymentPipeline] (task 19), which saves and speaks
+ * money *received*. Money sent, top-ups, exchange and every other SMS are dropped: not logged
+ * in release builds, not stored, nothing about them is kept.
  */
 class SmsReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -32,21 +32,20 @@ class SmsReceiver : BroadcastReceiver() {
                 }
                 .orEmpty()
 
-        val parser = AppParser.get(context.applicationContext)
-        val payments =
-            SmsAssembler.assemble(parts).mapNotNull { sms ->
+        // Only Zaad / eDahab SMS go further; everything else is dropped right here.
+        val providerSms =
+            SmsAssembler.assemble(parts).filter { sms ->
                 if (isDebugBuild(context)) logRawSample(sms)
-                parser.parse(sms.body)?.let { sms to it }
+                PaymentSmsFilter.providerOf(sms.body) != null
             }
-        if (payments.isEmpty()) return
+        if (providerSms.isEmpty()) return
 
-        // Keep the receiver alive until the work (the beep) is finished.
+        // Keep the receiver alive until each SMS is saved and handed to the announcer.
         val pending = goAsync()
-        var remaining = payments.size
-        payments.forEach { (sms, payment) ->
-            PaymentHandler.onPayment(context.applicationContext, sms, payment, receivedAt) {
-                remaining--
-                if (remaining == 0) pending.finish()
+        val remaining = AtomicInteger(providerSms.size)
+        providerSms.forEach { sms ->
+            PaymentHandler.onSms(context, sms, receivedAt) {
+                if (remaining.decrementAndGet() == 0) pending.finish()
             }
         }
     }

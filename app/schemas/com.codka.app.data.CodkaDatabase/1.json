@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "df212dc204257dde30c28223c78f9796",
+    "identityHash": "85c4aa4447f02516cc655278b9c4e188",
     "entities": [
       {
         "tableName": "payments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `provider` TEXT NOT NULL, `currency` TEXT NOT NULL, `amount_minor` INTEGER NOT NULL, `sender_name` TEXT NOT NULL, `sender_phone` TEXT NOT NULL, `balance_after_minor` INTEGER, `received_at` INTEGER NOT NULL, `is_suspicious` INTEGER NOT NULL, `reason` TEXT, `sms_hash` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `provider` TEXT NOT NULL, `currency` TEXT NOT NULL, `amount_minor` INTEGER NOT NULL, `sender_name` TEXT NOT NULL, `sender_phone` TEXT NOT NULL, `balance_after` TEXT, `received_at` INTEGER NOT NULL, `is_suspicious` INTEGER NOT NULL, `reason` TEXT, `sms_hash` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,9 +45,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "balanceAfterMinor",
-            "columnName": "balance_after_minor",
-            "affinity": "INTEGER"
+            "fieldPath": "balanceAfter",
+            "columnName": "balance_after",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "receivedAt",
@@ -127,7 +127,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'df212dc204257dde30c28223c78f9796')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '85c4aa4447f02516cc655278b9c4e188')"
     ]
   }
 }

@@ -7,12 +7,15 @@ import kotlinx.coroutines.flow.map
 
 /** Codka's settings, with names and types (task 14). Stored in the `settings` table. */
 class Settings(private val dao: SettingsDao) {
-    /** The last balance an SMS showed for this account, in minor units (used by the fake check). */
-    suspend fun lastBalance(provider: Provider, currency: Currency): Long? =
-        dao.get(balanceKey(provider, currency))?.toLongOrNull()
+    /**
+     * The last balance an SMS showed for this account, exactly as written ("150.0049").
+     * The fake-SMS check (task 13) compares new payments with it.
+     */
+    suspend fun lastBalance(provider: Provider, currency: Currency): String? =
+        dao.get(balanceKey(provider, currency))
 
-    suspend fun setLastBalance(provider: Provider, currency: Currency, minor: Long) =
-        dao.put(SettingEntity(balanceKey(provider, currency), minor.toString()))
+    suspend fun setLastBalance(provider: Provider, currency: Currency, balance: String) =
+        dao.put(SettingEntity(balanceKey(provider, currency), balance))
 
     /** How loud Codka speaks, 0–100 % of the phone's media volume. Full by default. */
     suspend fun volume(): Int = dao.get(VOLUME)?.toIntOrNull() ?: DEFAULT_VOLUME

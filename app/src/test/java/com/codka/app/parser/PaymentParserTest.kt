@@ -88,6 +88,28 @@ class PaymentParserTest {
     }
 
     @Test
+    fun `reads the new balance exactly as written`() {
+        // Zaad dollars show 4 decimals; eDahab and shillings show 1 or 2. Commas are removed.
+        assertEquals("150.0049", parser.parse(resource("zaad-usd-001.txt"))!!.balance)
+        assertEquals("1420000.05", parser.parse(resource("zaad-slsh-005.txt"))!!.balance)
+        assertEquals("140.1", parser.parse(resource("edahab-usd-001.txt"))!!.balance)
+        assertEquals("31250.8", parser.parse(resource("edahab-slsh-001.txt"))!!.balance)
+    }
+
+    @TestFactory
+    fun `every payment sample has a balance`(): List<DynamicTest> {
+        val samples = JSONObject(resource("expected.json")).getJSONArray("samples")
+        return (0 until samples.length()).map { i ->
+            val file = samples.getJSONObject(i).getString("file")
+            DynamicTest.dynamicTest(file) {
+                val balance = parser.parse(resource(file))!!.balance
+                assertNotNull(balance, file)
+                assertTrue(Regex("""\d+(\.\d+)?""").matches(balance!!), "$file: $balance")
+            }
+        }
+    }
+
+    @Test
     fun `eDahab still parses when the line breaks are lost`() {
         val oneLine = resource("edahab-usd-001.txt").replace("\n", " ")
         val parsed = parser.parse(oneLine)

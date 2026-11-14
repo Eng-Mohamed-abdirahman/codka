@@ -72,22 +72,30 @@ class Announcer(context: Context) {
             next()
         }
 
-        // Safety net: if playback stops moving (no audio focus during a phone call, say),
-        // don't block the queue forever. Restarted at every clip, so long sentences are fine.
+        // Safety net: if playback stops moving (audio focus never comes back during a phone call,
+        // say), don't block the queue forever. Only time with no progress at all counts, so a
+        // short pause (the SMS notification sound takes focus for a moment) or a slow phone is fine.
+        var lastProgress = -1L to -1L
+        var stillSince = SystemClock.uptimeMillis()
+
         fun watchdog() {
-            main.removeCallbacksAndMessages(player)
-            main.postAtTime({
+            val progress = player.currentMediaItemIndex.toLong() to player.currentPosition
+            val now = SystemClock.uptimeMillis()
+            if (progress != lastProgress) {
+                lastProgress = progress
+                stillSince = now
+            } else if (now - stillSince >= STUCK_MS) {
                 Log.w(TAG, "Announcement stuck, skipping it")
                 end()
-            }, player, SystemClock.uptimeMillis() + STUCK_MS)
+                return
+            }
+            main.postAtTime(::watchdog, player, now + CHECK_MS)
         }
         player.addListener(
             object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
                     if (state == Player.STATE_ENDED) end()
                 }
-
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) = watchdog()
 
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e(TAG, "Announcement failed", error)
@@ -135,7 +143,8 @@ class Announcer(context: Context) {
     private companion object {
         const val TAG = "Codka"
 
-        /** No new clip for this long means playback is stuck (the longest clip is about 6 s). */
-        const val STUCK_MS = 15_000L
+        /** No playback progress for this long means it is stuck. */
+        const val STUCK_MS = 30_000L
+        const val CHECK_MS = 2_000L
     }
 }
