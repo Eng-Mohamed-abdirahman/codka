@@ -76,11 +76,7 @@ class PaymentPipelineTest {
             assertEquals(
                 file.name,
                 listOf(
-                    AnnounceRequest.Payment(
-                        expected.currency,
-                        expected.amount,
-                        expected.senderPhone
-                    )
+                    AnnounceRequest.Payment(expected.currency, expected.amount)
                 ),
                 spoken
             )

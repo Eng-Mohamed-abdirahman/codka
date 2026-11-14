@@ -74,11 +74,7 @@ class PaymentPipeline(
                         settings.setLastBalance(payment.provider, payment.currency, it)
                     }
                     speak(
-                        AnnounceRequest.Payment(
-                            payment.currency,
-                            payment.amount,
-                            payment.senderPhone
-                        )
+                        AnnounceRequest.Payment(payment.currency, payment.amount)
                     )
                     Outcome.Payment(saved.id)
                 }
