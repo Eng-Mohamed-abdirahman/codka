@@ -27,8 +27,11 @@ data class PaymentEntity(
     @ColumnInfo(name = "sender_name") val senderName: String,
     /** The full number from the SMS (Codka reads it out digit by digit). */
     @ColumnInfo(name = "sender_phone") val senderPhone: String,
-    /** The balance the SMS says the seller has after this payment, if it says one. */
-    @ColumnInfo(name = "balance_after_minor") val balanceAfterMinor: Long? = null,
+    /**
+     * The balance the SMS says the seller has after this payment, exactly as written
+     * ("150.0049": Zaad dollars have 4 decimals, so cents would round it). Null if not shown.
+     */
+    @ColumnInfo(name = "balance_after") val balanceAfter: String? = null,
     /** When the phone received the SMS, in milliseconds since 1970. */
     @ColumnInfo(name = "received_at") val receivedAt: Long,
     /** True if the fake-SMS check (task 13) doubts this payment; [reason] says why. */

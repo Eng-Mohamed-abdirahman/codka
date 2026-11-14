@@ -8,7 +8,9 @@ data class SmsFormat(
     val provider: Provider,
     val currency: Currency,
     val marker: String,
-    val pattern: Regex
+    val pattern: Regex,
+    /** Finds the new balance (1 group). Null if this format has none. */
+    val balancePattern: Regex? = null
 )
 
 object SmsFormatLoader {
@@ -24,7 +26,10 @@ object SmsFormatLoader {
                 provider = Provider.valueOf(f.getString("provider")),
                 currency = Currency.valueOf(f.getString("currency")),
                 marker = f.getString("marker"),
-                pattern = Regex(f.getString("pattern"))
+                pattern = Regex(f.getString("pattern")),
+                balancePattern = f.optString("balancePattern").takeIf {
+                    it.isNotEmpty()
+                }?.let(::Regex)
             )
         }
     }
