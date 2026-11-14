@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -33,7 +35,18 @@ android {
 
     testOptions {
         unitTests.all { it.useJUnitPlatform() }
+        // Robolectric (database tests) needs the app's resources and manifest.
+        unitTests.isIncludeAndroidResources = true
     }
+}
+
+room {
+    // Each database version's schema is saved here, so future migrations can be checked.
+    schemaDirectory("$projectDir/schemas")
+}
+
+ktlint {
+    filter { exclude { it.file.path.contains("build") } }
 }
 
 dependencies {
@@ -46,10 +59,20 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     // Plays the recorded Somali clips back to back (task 18)
     implementation(libs.androidx.media3.exoplayer)
+    // Payment history and settings (task 14)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.params)
     // Real org.json for unit tests (Android's built-in one is only a stub on the computer)
     testImplementation(libs.org.json)
     testRuntimeOnly(libs.junit.platform.launcher)
+    // Database tests run on the computer with Robolectric, which uses JUnit 4.
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.junit4)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testRuntimeOnly(libs.junit.vintage.engine)
 }
