@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,8 +28,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.codka.app.R
+import com.codka.app.parser.Currency
 import com.codka.app.sms.BackgroundSetup
 import com.codka.app.sms.SpikeLog
+import com.codka.app.voice.AnnounceRequest
+import com.codka.app.voice.AnnouncerService
 import kotlinx.coroutines.delay
 
 // Task 07 spike screen: ask for SMS permission and show the spike log.
@@ -91,6 +95,36 @@ fun HomeScreen() {
             Text(stringResource(R.string.setup_autostart_needed))
             OutlinedButton(onClick = { BackgroundSetup.openAutoStartSetting(context) }) {
                 Text(stringResource(R.string.setup_autostart_button))
+            }
+        }
+
+        // Task 18: hear the announcer without waiting for a real payment.
+        Text(
+            stringResource(R.string.voice_test_title),
+            style = MaterialTheme.typography.titleMedium
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = {
+                AnnouncerService.announce(
+                    context,
+                    AnnounceRequest.Payment(Currency.USD, "45.25", "633000001")
+                )
+            }) { Text(stringResource(R.string.voice_test_payment)) }
+            OutlinedButton(onClick = {
+                AnnouncerService.announce(
+                    context,
+                    AnnounceRequest.Payment(Currency.SLSH, "1250000", "+252 654 000 004")
+                )
+            }) { Text(stringResource(R.string.voice_test_number)) }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = { AnnouncerService.announce(context, AnnounceRequest.Fake) }) {
+                Text(stringResource(R.string.voice_test_fake))
+            }
+            OutlinedButton(onClick = {
+                AnnouncerService.announce(context, AnnounceRequest.Unknown)
+            }) {
+                Text(stringResource(R.string.voice_test_unknown))
             }
         }
 

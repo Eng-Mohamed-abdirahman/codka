@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Plays the recorded Somali clips back to back (task 18)
+    implementation(libs.androidx.media3.exoplayer)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.params)
