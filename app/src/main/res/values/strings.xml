@@ -19,4 +19,13 @@
     <string name="setup_battery_ok">✓ Batteriga waa diyaar.</string>
     <string name="setup_autostart_needed">2. App Launch: ka raadi Codka oo shid.</string>
     <string name="setup_autostart_button">Fur App Launch</string>
+
+    <!-- Task 18: announcer -->
+    <string name="announce_channel">Codka hadlaya</string>
+    <string name="announce_notification">Codka wuu hadlayaa…</string>
+    <string name="voice_test_title">Tijaabi codka</string>
+    <string name="voice_test_payment">$45.25 · Axmed Cali</string>
+    <string name="voice_test_number">SLSH 1,250,000 · lambar</string>
+    <string name="voice_test_fake">Been abuur</string>
+    <string name="voice_test_unknown">Fariin aan la garanayn</string>
 </resources>
