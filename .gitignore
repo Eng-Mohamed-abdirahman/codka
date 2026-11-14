@@ -54,3 +54,13 @@ Thumbs.db
 # Kotlin
 # ==========================
 .kotlin/
+
+# ==========================
+# Raw voice recordings and extra takes (only the final clips in res/raw are committed)
+# ==========================
+recording/
+
+# ==========================
+# Claude Code local preview config
+# ==========================
+.claude/launch.json
