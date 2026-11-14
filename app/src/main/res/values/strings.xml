@@ -24,8 +24,8 @@
     <string name="announce_channel">Codka hadlaya</string>
     <string name="announce_notification">Codka wuu hadlayaa…</string>
     <string name="voice_test_title">Tijaabi codka</string>
-    <string name="voice_test_payment">$45.25 · Axmed Cali</string>
-    <string name="voice_test_number">SLSH 1,250,000 · lambar</string>
+    <string name="voice_test_payment">$45.25 · 633000001</string>
+    <string name="voice_test_number">SLSH 1,250,000 · +252 654000004</string>
     <string name="voice_test_fake">Been abuur</string>
     <string name="voice_test_unknown">Fariin aan la garanayn</string>
 </resources>

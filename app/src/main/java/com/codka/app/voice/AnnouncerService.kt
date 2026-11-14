@@ -79,7 +79,6 @@ class AnnouncerService : Service() {
         private const val EXTRA_KIND = "kind"
         private const val EXTRA_CURRENCY = "currency"
         private const val EXTRA_AMOUNT = "amount"
-        private const val EXTRA_NAME = "name"
         private const val EXTRA_PHONE = "phone"
 
         /** Used when Android refuses to start the service: speak anyway, without its protection. */
@@ -96,7 +95,6 @@ class AnnouncerService : Service() {
                         .putExtra(EXTRA_KIND, "payment")
                         .putExtra(EXTRA_CURRENCY, request.currency.name)
                         .putExtra(EXTRA_AMOUNT, request.amount)
-                        .putExtra(EXTRA_NAME, request.senderName)
                         .putExtra(EXTRA_PHONE, request.senderPhone)
             }
             try {
@@ -119,7 +117,6 @@ class AnnouncerService : Service() {
                             intent.getStringExtra(EXTRA_CURRENCY) ?: return null
                         ),
                         amount = intent.getStringExtra(EXTRA_AMOUNT) ?: return null,
-                        senderName = intent.getStringExtra(EXTRA_NAME).orEmpty(),
                         senderPhone = intent.getStringExtra(EXTRA_PHONE).orEmpty()
                     )
                 else -> null

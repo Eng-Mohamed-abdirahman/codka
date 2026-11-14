@@ -107,13 +107,13 @@ fun HomeScreen() {
             OutlinedButton(onClick = {
                 AnnouncerService.announce(
                     context,
-                    AnnounceRequest.Payment(Currency.USD, "45.25", "AXMED CALI", "252634561234")
+                    AnnounceRequest.Payment(Currency.USD, "45.25", "633000001")
                 )
             }) { Text(stringResource(R.string.voice_test_payment)) }
             OutlinedButton(onClick = {
                 AnnouncerService.announce(
                     context,
-                    AnnounceRequest.Payment(Currency.SLSH, "1250000", "", "252634566001")
+                    AnnounceRequest.Payment(Currency.SLSH, "1250000", "+252 654 000 004")
                 )
             }) { Text(stringResource(R.string.voice_test_number)) }
         }

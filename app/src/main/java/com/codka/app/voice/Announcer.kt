@@ -5,6 +5,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -12,12 +13,11 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import java.io.File
 
 /**
  * Plays announcements one after another (task 18). Main thread only.
  *
- * Each announcement is a playlist of recorded clips (plus the TTS name file), played by one
+ * Each announcement is a playlist of recorded clips, played by one
  * ExoPlayer so the clips follow each other with no gaps. It takes audio focus (music pauses)
  * and turns the media volume up to full while speaking, then puts it back.
  */
@@ -25,7 +25,6 @@ class Announcer(context: Context) {
     private val appContext = context.applicationContext
     private val main = Handler(Looper.getMainLooper())
     private val audio = appContext.getSystemService(AudioManager::class.java)
-    private val nameVoice = NameVoice(appContext)
     private val queue = ArrayDeque<AnnounceRequest>()
     private var busy = false
 
@@ -45,17 +44,11 @@ class Announcer(context: Context) {
             return
         }
         busy = true
-        if (request is AnnounceRequest.Payment && Announcement.wantsName(request)) {
-            nameVoice.prepare(Announcement.displayName(request.senderName)!!) { nameFile ->
-                play(Announcement.build(request, canSpeakName = nameFile != null), nameFile)
-            }
-        } else {
-            play(Announcement.build(request, canSpeakName = false), null)
-        }
+        play(Announcement.build(request))
     }
 
-    private fun play(parts: List<Part>, nameFile: File?) {
-        val items = parts.mapNotNull { part -> mediaItem(part, nameFile) }
+    private fun play(clips: List<String>) {
+        val items = clips.mapNotNull(::mediaItem)
         val player = ExoPlayer.Builder(appContext).build()
         player.setAudioAttributes(
             AudioAttributes
@@ -78,11 +71,23 @@ class Announcer(context: Context) {
             restoreVolume()
             next()
         }
+
+        // Safety net: if playback stops moving (no audio focus during a phone call, say),
+        // don't block the queue forever. Restarted at every clip, so long sentences are fine.
+        fun watchdog() {
+            main.removeCallbacksAndMessages(player)
+            main.postAtTime({
+                Log.w(TAG, "Announcement stuck, skipping it")
+                end()
+            }, player, SystemClock.uptimeMillis() + STUCK_MS)
+        }
         player.addListener(
             object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
                     if (state == Player.STATE_ENDED) end()
                 }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) = watchdog()
 
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e(TAG, "Announcement failed", error)
@@ -90,29 +95,20 @@ class Announcer(context: Context) {
                 }
             }
         )
-        // Safety net: if audio focus is never given (a phone call, say), don't block the queue forever.
-        main.postAtTime({ end() }, player, android.os.SystemClock.uptimeMillis() + MAX_MS)
-        Log.i(TAG, "Announcing ${items.size} clips, name=${nameFile != null}")
+        watchdog()
+        Log.i(TAG, "Announcing ${items.size} clips")
         player.setMediaItems(items)
         player.prepare()
         player.play()
     }
 
-    private fun mediaItem(part: Part, nameFile: File?): MediaItem? = when (part) {
-        is Part.Clip -> {
-            val id = appContext.resources.getIdentifier(
-                part.name,
-                "raw",
-                appContext.packageName
-            )
-            if (id == 0) {
-                Log.e(TAG, "Missing clip ${part.name}")
-                null
-            } else {
-                MediaItem.fromUri(Uri.parse("android.resource://${appContext.packageName}/$id"))
-            }
+    private fun mediaItem(clip: String): MediaItem? {
+        val id = appContext.resources.getIdentifier(clip, "raw", appContext.packageName)
+        if (id == 0) {
+            Log.e(TAG, "Missing clip $clip")
+            return null
         }
-        is Part.Name -> nameFile?.let { MediaItem.fromUri(Uri.fromFile(it)) }
+        return MediaItem.fromUri(Uri.parse("android.resource://${appContext.packageName}/$id"))
     }
 
     /** Turns the media volume to full and returns a function that puts it back. */
@@ -138,6 +134,8 @@ class Announcer(context: Context) {
 
     private companion object {
         const val TAG = "Codka"
-        const val MAX_MS = 60_000L
+
+        /** No new clip for this long means playback is stuck (the longest clip is about 6 s). */
+        const val STUCK_MS = 15_000L
     }
 }
