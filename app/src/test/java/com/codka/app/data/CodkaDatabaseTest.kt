@@ -36,7 +36,7 @@ class CodkaDatabaseTest {
     private val yesterday = morning - 24 * 3_600_000L
 
     private fun payment(amount: String = "45.25", currency: Currency = Currency.USD) =
-        ParsedPayment(Provider.ZAAD, currency, amount, "AXMED CALI", "633000001")
+        ParsedPayment(Provider.ZAAD, currency, amount, "AXMED CALI", "633000001", "150.0049")
 
     private fun sms(tix: Int) =
         "[-[--ZAAD SERVICES--]-] Tix: $tix, Waxaad \$45.25 ka heshay AXMED CALI (633000001)"
@@ -71,7 +71,7 @@ class CodkaDatabaseTest {
         assertEquals(morning, saved.receivedAt)
         assertFalse(saved.isSuspicious)
         assertNull(saved.reason)
-        assertNull(saved.balanceAfterMinor)
+        assertEquals("150.0049", saved.balanceAfter)
     }
 
     @Test
@@ -143,14 +143,14 @@ class CodkaDatabaseTest {
 
         settings.setVolume(70)
         settings.setSetupDone(true)
-        settings.setLastBalance(Provider.ZAAD, Currency.USD, 15_000)
-        settings.setLastBalance(Provider.ZAAD, Currency.SLSH, 3_125_080)
+        settings.setLastBalance(Provider.ZAAD, Currency.USD, "150.0049")
+        settings.setLastBalance(Provider.ZAAD, Currency.SLSH, "31250.8")
 
         assertEquals(70, settings.volume())
         assertTrue(settings.setupDone())
         assertTrue(settings.watchSetupDone().first())
-        assertEquals(15_000L, settings.lastBalance(Provider.ZAAD, Currency.USD))
-        assertEquals(3_125_080L, settings.lastBalance(Provider.ZAAD, Currency.SLSH))
+        assertEquals("150.0049", settings.lastBalance(Provider.ZAAD, Currency.USD))
+        assertEquals("31250.8", settings.lastBalance(Provider.ZAAD, Currency.SLSH))
         assertNull(settings.lastBalance(Provider.EDAHAB, Currency.USD))
     }
 

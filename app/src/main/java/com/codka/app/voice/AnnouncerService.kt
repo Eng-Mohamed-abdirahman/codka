@@ -79,7 +79,6 @@ class AnnouncerService : Service() {
         private const val EXTRA_KIND = "kind"
         private const val EXTRA_CURRENCY = "currency"
         private const val EXTRA_AMOUNT = "amount"
-        private const val EXTRA_PHONE = "phone"
 
         /** Used when Android refuses to start the service: speak anyway, without its protection. */
         private var fallback: Announcer? = null
@@ -95,7 +94,6 @@ class AnnouncerService : Service() {
                         .putExtra(EXTRA_KIND, "payment")
                         .putExtra(EXTRA_CURRENCY, request.currency.name)
                         .putExtra(EXTRA_AMOUNT, request.amount)
-                        .putExtra(EXTRA_PHONE, request.senderPhone)
             }
             try {
                 ContextCompat.startForegroundService(context, intent)
@@ -116,8 +114,7 @@ class AnnouncerService : Service() {
                         currency = Currency.valueOf(
                             intent.getStringExtra(EXTRA_CURRENCY) ?: return null
                         ),
-                        amount = intent.getStringExtra(EXTRA_AMOUNT) ?: return null,
-                        senderPhone = intent.getStringExtra(EXTRA_PHONE).orEmpty()
+                        amount = intent.getStringExtra(EXTRA_AMOUNT) ?: return null
                     )
                 else -> null
             }

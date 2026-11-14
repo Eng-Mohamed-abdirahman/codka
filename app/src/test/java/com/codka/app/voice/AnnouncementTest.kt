@@ -5,6 +5,7 @@ import com.codka.app.parser.PaymentParser
 import com.codka.app.parser.SmsFormatLoader
 import java.io.File
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
@@ -13,21 +14,15 @@ class AnnouncementTest {
     // Unit tests run from the app/ folder.
     private val rawDir = File("src/main/res/raw")
 
-    private fun payment(
-        amount: String,
-        currency: Currency = Currency.USD,
-        phone: String = "633000001"
-    ) = AnnounceRequest.Payment(currency, amount, phone)
+    private fun payment(amount: String, currency: Currency = Currency.USD) =
+        AnnounceRequest.Payment(currency, amount)
 
     private fun text(clips: List<String>) = clips.joinToString(" ")
 
-    private val from633000001 =
-        "p_ka_timid_lambarka n_6_lix n_3_saddex n_3_saddex n_0_eber n_0_eber n_0_eber n_0_eber n_0_eber n_1_kow"
-
     @Test
-    fun `payment says amount, currency and the full number`() {
+    fun `payment says only the amount and currency`() {
         assertEquals(
-            "p_lacag_ayaa_kuu_timid n_5_shan w_iyo n_20_labaatan c_doolar $from633000001",
+            "p_lacag_ayaa_kuu_timid n_5_shan w_iyo n_20_labaatan c_doolar",
             text(Announcement.once(payment("25")))
         )
     }
@@ -35,7 +30,7 @@ class AnnouncementTest {
     @Test
     fun `cents are spoken as doolar iyo senti`() {
         assertEquals(
-            "p_lacag_ayaa_kuu_timid n_7_toddoba c_doolar w_iyo n_50_konton c_senti $from633000001",
+            "p_lacag_ayaa_kuu_timid n_7_toddoba c_doolar w_iyo n_50_konton c_senti",
             text(Announcement.once(payment("7.5")))
         )
     }
@@ -43,29 +38,8 @@ class AnnouncementTest {
     @Test
     fun `shilin amounts use shilin`() {
         assertEquals(
-            "p_lacag_ayaa_kuu_timid n_2_laba n_1000_kun c_shilin $from633000001",
+            "p_lacag_ayaa_kuu_timid n_2_laba n_1000_kun c_shilin",
             text(Announcement.once(payment("2000", Currency.SLSH)))
-        )
-    }
-
-    @Test
-    fun `the 252 country code is not read`() {
-        assertEquals("654000004", Announcement.localNumber("+252 654 000 004"))
-        assertEquals("654000004", Announcement.localNumber("252654000004"))
-        assertEquals("654000004", Announcement.localNumber("(654000004)"))
-        // A 9-digit local number that happens to start with 252 is kept whole.
-        assertEquals("252000004", Announcement.localNumber("252000004"))
-    }
-
-    @Test
-    fun `no usable number still says the amount`() {
-        assertEquals(
-            "p_lacag_ayaa_kuu_timid n_5_shan c_doolar",
-            text(Announcement.once(payment("5", phone = "")))
-        )
-        assertEquals(
-            "p_lacag_ayaa_kuu_timid n_5_shan c_doolar",
-            text(Announcement.once(payment("5", phone = "12")))
         )
     }
 
@@ -95,7 +69,6 @@ class AnnouncementTest {
         val sentences =
             listOf(
                 Announcement.ARRIVED,
-                Announcement.FROM_NUMBER,
                 Announcement.ONCE_MORE,
                 Announcement.FAKE,
                 Announcement.UNKNOWN,
@@ -105,9 +78,9 @@ class AnnouncementTest {
         assertEquals(emptyList<String>(), missing, "missing clips in $rawDir")
     }
 
-    /** Real SMS -> parser -> announcement, so the real number format is checked too. */
+    /** Real SMS -> parser -> announcement: no sender number is ever spoken. */
     @TestFactory
-    fun `every sample SMS is announced with its full number`(): List<DynamicTest> {
+    fun `every sample SMS is announced with its amount only`(): List<DynamicTest> {
         val parser =
             PaymentParser(SmsFormatLoader.fromJson(File("src/main/assets/parsers.json").readText()))
         val samples =
@@ -119,20 +92,11 @@ class AnnouncementTest {
             DynamicTest.dynamicTest(file.name) {
                 val sms =
                     requireNotNull(parser.parse(file.readText())) { "${file.name} not parsed" }
-                val clips = Announcement.once(
-                    AnnounceRequest.Payment(sms.currency, sms.amount, sms.senderPhone)
-                )
+                val clips = Announcement.once(AnnounceRequest.Payment(sms.currency, sms.amount))
                 val info = "${file.name} -> ${text(clips)}"
-                val number = Announcement.localNumber(sms.senderPhone)
-                assertEquals(9, number.length, info)
                 assertEquals(Announcement.ARRIVED, clips.first(), info)
-                // The number is the end: FROM_NUMBER, then one clip per digit.
-                assertEquals(Announcement.FROM_NUMBER, clips[clips.size - number.length - 1], info)
-                assertEquals(
-                    SomaliNumbers.digits(number).map(VoiceClips::forWord),
-                    clips.takeLast(number.length),
-                    info
-                )
+                assertTrue(clips.last().startsWith("c_"), "ends with the currency: $info")
+                assertTrue(clips.none { it == "p_ka_timid_lambarka" }, info)
             }
         }
     }

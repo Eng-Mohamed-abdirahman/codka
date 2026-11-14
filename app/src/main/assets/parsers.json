@@ -1,34 +1,38 @@
 {
   "version": 1,
-  "_about": "Zaad / eDahab payment SMS formats (task 10). When a provider changes its wording, update the pattern here and add the new SMS to app/src/test/resources/sms-samples. Each pattern has 3 groups: (1) amount, (2) sender name, (3) sender phone.",
+  "_about": "Zaad / eDahab payment SMS formats (task 10). When a provider changes its wording, update the pattern here and add the new SMS to app/src/test/resources/sms-samples. Each pattern has 3 groups: (1) amount, (2) sender name, (3) sender phone. balancePattern (optional) has 1 group: the new balance after the payment.",
   "formats": [
     {
       "id": "zaad-usd",
       "provider": "ZAAD",
       "currency": "USD",
       "marker": "[-[--ZAAD SERVICES--]-]",
-      "pattern": "Waxaad \\$([0-9][0-9,]*(?:\\.[0-9]+)?) ka heshay\\s+(.+?)\\s*\\((\\d+)\\)"
+      "pattern": "Waxaad \\$([0-9][0-9,]*(?:\\.[0-9]+)?) ka heshay\\s+(.+?)\\s*\\((\\d+)\\)",
+      "balancePattern": "Hadhaagaaga\\s*:\\s*\\$\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)"
     },
     {
       "id": "zaad-slsh",
       "provider": "ZAAD",
       "currency": "SLSH",
       "marker": "[-[--ZAAD SHILLING--]-]",
-      "pattern": "Waxaad SLSH([0-9][0-9,]*(?:\\.[0-9]+)?) ka heshay\\s+(.+?)\\s*\\((\\d+)\\)"
+      "pattern": "Waxaad SLSH([0-9][0-9,]*(?:\\.[0-9]+)?) ka heshay\\s+(.+?)\\s*\\((\\d+)\\)",
+      "balancePattern": "Hadhaagaaga\\s*:\\s*SLSH\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)"
     },
     {
       "id": "edahab-usd",
       "provider": "EDAHAB",
       "currency": "USD",
       "marker": "[eDahab Service-Dollar]",
-      "pattern": "^\\s*([0-9][0-9,]*(?:\\.[0-9]+)?) Dollar Ayaad ka Heshay\\s+(.+?)\\s*\\((\\d+)\\)"
+      "pattern": "^\\s*([0-9][0-9,]*(?:\\.[0-9]+)?) Dollar Ayaad ka Heshay\\s+(.+?)\\s*\\((\\d+)\\)",
+      "balancePattern": "Hadhaagaaga Cusubi Waa\\s*:\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)"
     },
     {
       "id": "edahab-slsh",
       "provider": "EDAHAB",
       "currency": "SLSH",
       "marker": "[eDahab Service-Shilling]",
-      "pattern": "^\\s*([0-9][0-9,]*(?:\\.[0-9]+)?) Shilling Ayaad ka Heshay\\s+(.+?)\\s*\\((\\d+)\\)"
+      "pattern": "^\\s*([0-9][0-9,]*(?:\\.[0-9]+)?) Shilling Ayaad ka Heshay\\s+(.+?)\\s*\\((\\d+)\\)",
+      "balancePattern": "Hadhaagaaga Cusubi Waa\\s*:\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)"
     }
   ]
 }

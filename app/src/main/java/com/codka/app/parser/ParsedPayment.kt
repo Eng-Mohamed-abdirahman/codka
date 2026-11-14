@@ -9,11 +9,14 @@ enum class Currency { USD, SLSH }
  *
  * [amount] is exactly what the SMS says, with only the thousands commas removed
  * ("12.5", "45.25", "2000"). It is never rounded and never turned into a floating-point number.
+ * [balance] is the new balance the SMS shows, kept the same way ("150.0049": Zaad dollars have
+ * 4 decimals), or null if the SMS doesn't show one.
  */
 data class ParsedPayment(
     val provider: Provider,
     val currency: Currency,
     val amount: String,
     val senderName: String,
-    val senderPhone: String
+    val senderPhone: String,
+    val balance: String? = null
 )

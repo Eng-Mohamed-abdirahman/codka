@@ -15,7 +15,14 @@ class PaymentParser(private val formats: List<SmsFormat>) {
                 currency = format.currency,
                 amount = amount.replace(",", ""),
                 senderName = name.trim().replace(WHITESPACE, " "),
-                senderPhone = phone
+                senderPhone = phone,
+                // Only look after the amount, so an earlier number in the SMS can't match.
+                balance =
+                format.balancePattern
+                    ?.find(body, match.range.last + 1)
+                    ?.groupValues
+                    ?.get(1)
+                    ?.replace(",", "")
             )
         }
         return null
