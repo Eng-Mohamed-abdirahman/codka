@@ -4,6 +4,12 @@ kotlin = "2.3.20"
 composeBom = "2026.06.01" # Compose 1.11.x; 1.12+ needs compileSdk 37 + AGP 9.1
 activityCompose = "1.13.0"
 media3 = "1.10.1"
+room = "2.8.5"
+ksp = "2.3.14"
+coroutines = "1.10.2"
+robolectric = "4.18"
+androidxTestCore = "1.7.0"
+junit4 = "4.13.2"
 junitJupiter = "5.11.4"
 ktlintGradle = "14.2.0"
 
@@ -15,6 +21,14 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junitJupiter" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitJupiter" }
 org-json = { group = "org.json", name = "json", version = "20260814" }
@@ -24,3 +38,5 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidx-room = { id = "androidx.room", version.ref = "room" }
