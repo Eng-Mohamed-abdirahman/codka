@@ -47,7 +47,8 @@ fun HomeScreen(
     today: List<PaymentEntity>,
     onSayAgain: (PaymentEntity) -> Unit,
     onOpenHistory: () -> Unit,
-    onOpenHelper: () -> Unit
+    onOpenSetup: () -> Unit,
+    smsAllowed: Boolean = true
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 12.dp),
@@ -55,8 +56,25 @@ fun HomeScreen(
     ) {
         // Small, out of the way: only the helper who sets the phone up needs it.
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            IconButton(onClick = onOpenHelper) {
+            IconButton(onClick = onOpenSetup) {
                 Icon(painterResource(R.drawable.ic_more), stringResource(R.string.open_helper))
+            }
+        }
+        // Without SMS permission Codka hears nothing: say so loudly, in red.
+        if (!smsAllowed) {
+            Button(
+                onClick = onOpenSetup,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = CodkaColors.Suspicious,
+                    contentColor = CodkaColors.OnSuspicious
+                )
+            ) {
+                Icon(painterResource(R.drawable.ic_warning), null, Modifier.size(28.dp))
+                Spacer(Modifier.size(8.dp))
+                Text(stringResource(R.string.sms_not_allowed), fontSize = 18.sp)
             }
         }
 

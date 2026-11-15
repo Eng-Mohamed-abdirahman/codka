@@ -13,6 +13,24 @@
     <string name="open_helper">Caawiyaha</string>
     <string name="back">Dib u noqo</string>
 
+    <string name="sms_not_allowed">SMS lama oggola. Taabo si loo hagaajiyo.</string>
+
+    <!-- Task 23: setup flow for the helper. Short, one idea per step. -->
+    <string name="setup_step">Tallaabo %1$d / %2$d</string>
+    <string name="setup_sms_title">U oggolow Codka inuu helo fariimaha lacagta</string>
+    <string name="setup_sms_button">Oggolow</string>
+    <string name="setup_open_settings">Ka fur Settings</string>
+    <string name="setup_battery_title">U oggolow Codka inuu shaqeeyo marka uu xiran yahay</string>
+    <string name="setup_autostart_title">Phone Master › App Launch: shid Codka</string>
+    <string name="setup_autostart_confirm">Waan shiday</string>
+    <string name="setup_voice_title">Tijaabi codka. Ma maqashay?</string>
+    <string name="setup_voice_button">Dhegeyso tijaabada</string>
+    <string name="setup_voice_heard">Haa, waan maqlay</string>
+    <string name="setup_next">Xiga</string>
+    <string name="setup_skip">Ka bood</string>
+    <string name="setup_finish">Dhammaad</string>
+    <string name="setup_tools">Qalabka tijaabada</string>
+
     <!-- Task 21: history -->
     <string name="history_title">Lacagaha maanta</string>
     <string name="play">Dhegeyso</string>
