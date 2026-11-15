@@ -1,152 +1,183 @@
 package com.codka.app.ui.home
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.sp
 import com.codka.app.R
+import com.codka.app.data.PaymentEntity
 import com.codka.app.parser.Currency
-import com.codka.app.sms.BackgroundSetup
-import com.codka.app.sms.SpikeLog
-import com.codka.app.voice.AnnounceRequest
-import com.codka.app.voice.AnnouncerService
-import kotlinx.coroutines.delay
+import com.codka.app.ui.AmountText
+import com.codka.app.ui.theme.CodkaColors
 
-// Task 07 spike screen: ask for SMS permission and show the spike log.
-// The real home screen (big amount + repeat button) is task 20.
+/**
+ * Task 20: the seller's screen. The last payment in big digits on its provider's colour
+ * (red if it may be fake), one huge button to hear it again, and today's total.
+ * Built for people who may not read: the colour and the speaker button carry the meaning.
+ */
 @Composable
-fun HomeScreen() {
-    val context = LocalContext.current
-    var hasPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) ==
-                PackageManager.PERMISSION_GRANTED
-        )
-    }
-    var log by remember { mutableStateOf(SpikeLog.read(context)) }
-    val requestPermission =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            hasPermission = granted
-        }
-
-    var batteryOk by remember { mutableStateOf(BackgroundSetup.isBatteryUnrestricted(context)) }
-    val isTranssion = remember { BackgroundSetup.isTranssion() }
-
-    // Refresh every 2 seconds while the screen is open (also picks up the battery
-    // setting when the user comes back from Settings).
-    LaunchedEffect(Unit) {
-        while (true) {
-            log = SpikeLog.read(context)
-            batteryOk = BackgroundSetup.isBatteryUnrestricted(context)
-            delay(2_000)
-        }
-    }
-
+fun HomeScreen(
+    last: PaymentEntity?,
+    today: List<PaymentEntity>,
+    onSayAgain: (PaymentEntity) -> Unit,
+    onOpenHistory: () -> Unit,
+    onOpenHelper: () -> Unit
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(stringResource(R.string.spike_title), style = MaterialTheme.typography.headlineMedium)
+        // Small, out of the way: only the helper who sets the phone up needs it.
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            IconButton(onClick = onOpenHelper) {
+                Icon(painterResource(R.drawable.ic_more), stringResource(R.string.open_helper))
+            }
+        }
 
-        if (hasPermission) {
-            Text(stringResource(R.string.spike_permission_ok))
+        if (last == null) {
+            NoPaymentYet(Modifier.weight(1f))
         } else {
-            Text(stringResource(R.string.spike_permission_needed))
-            Button(onClick = { requestPermission.launch(Manifest.permission.RECEIVE_SMS) }) {
-                Text(stringResource(R.string.spike_allow_sms))
-            }
+            LastPaymentCard(last)
+            Spacer(Modifier.weight(1f))
+            SayAgainButton(onClick = { onSayAgain(last) })
+            Spacer(Modifier.weight(1f))
         }
 
-        // Without these, phones like Infinix freeze Codka and drop the payment SMS.
-        Text(stringResource(R.string.setup_title), style = MaterialTheme.typography.titleMedium)
-        if (batteryOk) {
-            Text(stringResource(R.string.setup_battery_ok))
-        } else {
-            Text(stringResource(R.string.setup_battery_needed))
-            Button(onClick = { BackgroundSetup.openBatterySetting(context) }) {
-                Text(stringResource(R.string.setup_battery_button))
-            }
+        OutlinedButton(
+            onClick = onOpenHistory,
+            modifier = Modifier.fillMaxWidth().height(72.dp),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Icon(painterResource(R.drawable.ic_list), null, Modifier.size(32.dp))
+            Spacer(Modifier.size(12.dp))
+            Text(
+                AmountText.totals(today)?.let { stringResource(R.string.today_total, it) }
+                    ?: stringResource(R.string.today_none),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
+            )
         }
-        // Android can't tell us whether App Launch is on, so the button always shows.
-        if (isTranssion) {
-            Text(stringResource(R.string.setup_autostart_needed))
-            OutlinedButton(onClick = { BackgroundSetup.openAutoStartSetting(context) }) {
-                Text(stringResource(R.string.setup_autostart_button))
-            }
-        }
+    }
+}
 
-        // Task 18: hear the announcer without waiting for a real payment.
+@Composable
+private fun LastPaymentCard(payment: PaymentEntity) {
+    val background = CodkaColors.cardOf(payment)
+    val ink = CodkaColors.onCardOf(payment)
+    Column(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(28.dp))
+            .background(background)
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
-            stringResource(R.string.voice_test_title),
-            style = MaterialTheme.typography.titleMedium
+            AmountText.providerName(payment.provider),
+            color = ink,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = {
-                AnnouncerService.announce(
-                    context,
-                    AnnounceRequest.Payment(Currency.USD, "45.25")
+        if (payment.isSuspicious) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(painterResource(R.drawable.ic_warning), null, Modifier.size(28.dp), tint = ink)
+                Spacer(Modifier.size(8.dp))
+                Text(
+                    stringResource(R.string.suspicious),
+                    color = ink,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
-            }) { Text(stringResource(R.string.voice_test_payment)) }
-            OutlinedButton(onClick = {
-                AnnouncerService.announce(
-                    context,
-                    AnnounceRequest.Payment(Currency.SLSH, "1250000")
-                )
-            }) { Text(stringResource(R.string.voice_test_number)) }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = { AnnouncerService.announce(context, AnnounceRequest.Fake) }) {
-                Text(stringResource(R.string.voice_test_fake))
-            }
-            OutlinedButton(onClick = {
-                AnnouncerService.announce(context, AnnounceRequest.Unknown)
-            }) {
-                Text(stringResource(R.string.voice_test_unknown))
             }
         }
+        BigAmount(payment, ink)
+        Text(AmountText.time(payment.receivedAt), color = ink, fontSize = 22.sp)
+    }
+}
 
-        OutlinedButton(onClick = {
-            SpikeLog.clear(context)
-            log = emptyList()
-        }) {
-            Text(stringResource(R.string.spike_clear_log))
+/** "$45.25" on one line; shillings put "SLSH" above the number so big amounts still fit. */
+@Composable
+private fun BigAmount(payment: PaymentEntity, ink: Color) {
+    val text = AmountText.format(payment)
+    val (label, number) =
+        when (payment.currency) {
+            Currency.USD -> null to text
+            Currency.SLSH -> "SLSH" to text.removePrefix("SLSH ")
         }
+    if (label != null) Text(label, color = ink, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+    Text(
+        number,
+        color = ink,
+        fontSize = if (number.length > 9) 48.sp else 64.sp,
+        fontWeight = FontWeight.Black,
+        maxLines = 1,
+        softWrap = false,
+        textAlign = TextAlign.Center
+    )
+}
 
-        if (log.isEmpty()) {
-            Text(stringResource(R.string.spike_log_empty))
-        } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(log.reversed()) { line ->
-                    Text(
-                        line,
-                        fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
+@Composable
+private fun SayAgainButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.size(200.dp),
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = CodkaColors.Ink,
+            contentColor = Color.White
+        )
+    ) {
+        Icon(
+            painterResource(R.drawable.ic_speaker),
+            stringResource(R.string.say_again),
+            Modifier.size(110.dp)
+        )
+    }
+}
+
+@Composable
+private fun NoPaymentYet(modifier: Modifier) {
+    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                painterResource(R.drawable.ic_speaker),
+                null,
+                Modifier.size(140.dp),
+                tint = Color(0xFFB0B0B0)
+            )
+            Text(
+                stringResource(R.string.no_payment_yet),
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
