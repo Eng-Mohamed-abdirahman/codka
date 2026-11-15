@@ -4,6 +4,19 @@
     <string name="app_name">Codka</string>
     <string name="home_ready">Codka waa diyaar.</string>
 
+    <!-- Task 20: home screen. Short words only: the colours and icons carry the meaning. -->
+    <string name="no_payment_yet">Weli lacag ma iman</string>
+    <string name="say_again">Ku celi</string>
+    <string name="suspicious">Digniin</string>
+    <string name="today_total">Maanta: %1$s</string>
+    <string name="today_none">Maanta lacag ma iman</string>
+    <string name="open_helper">Caawiyaha</string>
+    <string name="back">Dib u noqo</string>
+
+    <!-- Task 21: history -->
+    <string name="history_title">Lacagaha maanta</string>
+    <string name="play">Dhegeyso</string>
+
     <!-- Task 07 spike screen (temporary) -->
     <string name="spike_title">Tijaabada SMS</string>
     <string name="spike_permission_needed">Codka wuxuu u baahan yahay oggolaanshaha SMS.</string>
