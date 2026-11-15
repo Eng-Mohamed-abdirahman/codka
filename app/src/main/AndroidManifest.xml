@@ -11,6 +11,8 @@
     <!-- Task 18: a short foreground service keeps Codka alive while it speaks. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- Android 13+: lets the "Codka is speaking" notice show. Asked for in setup step 1. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
         android:name="android.hardware.telephony"
