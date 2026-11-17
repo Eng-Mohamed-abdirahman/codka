@@ -7,8 +7,10 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Task 07 spike: a plain text log in the app's private storage, so the result can be
- * read on the phone after testing with the app closed. Never leaves the phone.
+ * A plain text log of what happened to each Zaad / eDahab SMS (outcome and sender only, never
+ * the amount, name or text), in the app's private storage. Started as the task 07 spike; kept
+ * for the pilot so a helper can see on a debug build ("Qalabka tijaabada") that payments arrive.
+ * Only the last [MAX_LINES] lines are kept, and it never leaves the phone.
  */
 object SpikeLog {
     private const val FILE_NAME = "spike-log.txt"
