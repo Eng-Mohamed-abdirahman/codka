@@ -2,16 +2,16 @@
 
 **Codka** ("the voice" in Somali) is an Android app for market sellers who can't read. When a Zaad or eDahab payment SMS arrives, the phone says the amount out loud in Somali, twice, so the seller knows right away if she was paid in full.
 
-> **Status:** In development. Setup, SMS → voice, and the home and history screens work. Still to come: the fake-SMS check and a pilot with sellers in Borama.
+> **Status:** In development. Setup, SMS → voice, and the home, history and helper settings screens work, in the new Codka design. Still to come: the fake-SMS check and a pilot with sellers in Borama.
 
 ## Screens
 
-| Setup (for the helper) | Home | History |
-|:---:|:---:|:---:|
-| <img src="screenshots/setup.png" width="240" alt="Setup step 1: allow SMS"> | <img src="screenshots/home.png" width="240" alt="Home: last payment in big digits and a replay button"> | <img src="screenshots/history.png" width="240" alt="History: today's payments with play buttons; a suspicious one in red"> |
-| One step per screen: SMS, battery, App Launch (Tecno/Infinix/itel), voice test | The last payment in big digits, and one big button to hear it again | Today's payments with a play button each; red means it may be fake |
+| Setup | Home | History | Helper settings |
+|:---:|:---:|:---:|:---:|
+| <img src="screenshots/setup.png" width="200" alt="Setup welcome screen: Codka logo, Ku soo dhawow, Bilow button"> | <img src="screenshots/home.png" width="200" alt="Home: a payment just arrived, 50,000 SLSH from eDahab, the round button shows Wuu hadlayaa while speaking"> | <img src="screenshots/history.png" width="200" alt="History: today's payments with play buttons; a fake one in red, struck through"> | <img src="screenshots/helper.png" width="200" alt="Helper settings: health check for SMS, battery and volume"> |
+| Welcome, then SMS, battery and a voice test: one step per screen | The payment that just arrived, and the round **Ku celi** button to hear it again (tap while speaking to stop) | Maanta / Shalay / Dhammaan, a play button on every row; red and struck through means it may be fake | Hold the logo for 2 s: a health check with a **Hagaaji** (fix) button for each problem |
 
-The screens work **without reading**: green is Zaad, gold is eDahab, red means "careful", and the buttons speak.
+The screens follow the Codka design system (Saffron and Indigo, Baloo 2 and Atkinson Hyperlegible) and work **without reading**: green means paid, red means "careful", teal **Z** is Zaad, purple **eD** is eDahab, and the buttons speak.
 
 ## What it does
 
@@ -53,9 +53,13 @@ app/src/main/java/com/codka/app/
 ├── parser/   # Zaad + eDahab parsers
 ├── voice/    # Somali number words and the announcer
 ├── data/     # Room database: payments and settings
-└── ui/       # Setup, home and history screens
+└── ui/       # Setup, home, history and helper screens; theme/ holds the design tokens
 ```
 
 ## Privacy
 
 Codka reads only Zaad and eDahab payment SMS. It stores a fingerprint of each payment SMS (never its text), and nothing leaves the phone.
+
+## Fonts
+
+The fonts (Baloo 2 and Atkinson Hyperlegible) are under the SIL Open Font License; their licences are in `licenses/fonts/`.
