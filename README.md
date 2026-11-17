@@ -45,6 +45,14 @@ You need Android Studio (its bundled JDK 17 is enough).
 - The debug APK is in `app/build/outputs/apk/debug/`.
 - **New SMS wording?** Add an anonymised sample to `sms-samples`, then update the pattern in `app/src/main/assets/parsers.json`.
 
+### Signed APK for sellers
+
+1. Once, create a signing key **outside** the repository and back it up: `keytool -genkeypair -v -keystore ../codka-release.jks -alias codka -keyalg RSA -keysize 2048 -validity 10000`
+2. Copy `keystore.properties.example` to `keystore.properties` (never committed) and fill in the passwords.
+3. Raise `versionCode` and `versionName` in `app/build.gradle.kts`, then run `./gradlew assembleRelease`. The APK is in `app/build/outputs/apk/release/`.
+
+Every later version must be signed with the same key, or it won't install over the old one.
+
 ## Project structure
 
 ```
