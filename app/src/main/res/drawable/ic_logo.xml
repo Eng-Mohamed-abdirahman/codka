@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Codka logo (design board 06): Saffron rounded square with an Indigo speaker. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:pathData="M14,0h20a14,14 0 0 1 14,14v20a14,14 0 0 1 -14,14h-20a14,14 0 0 1 -14,-14v-20a14,14 0 0 1 14,-14z"
+        android:fillColor="#FFF2A900" />
+    <path
+        android:pathData="M11,20v8h6l8,6V14l-8,6h-6z"
+        android:fillColor="#FF1E2A5A" />
+    <path
+        android:pathData="M30.5,18.5a7,7 0 0 1 0,11"
+        android:strokeColor="#FF1E2A5A"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M35,14.5a12.5,12.5 0 0 1 0,19"
+        android:strokeColor="#FF1E2A5A"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>
