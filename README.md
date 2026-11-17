@@ -2,7 +2,7 @@
 
 **Codka** ("the voice" in Somali) is an Android app for market sellers who can't read. When a Zaad or eDahab payment SMS arrives, the phone says the amount out loud in Somali, twice, so the seller knows right away if she was paid in full.
 
-> **Status:** In development. Setup, SMS → voice, and the home, history and helper settings screens work, in the new Codka design. Still to come: the fake-SMS check and a pilot with sellers in Borama.
+> **Status:** In development. Setup, SMS → voice, the fake-SMS check, and the home, history and helper settings screens work, in the new Codka design. Still to come: checking the sender IDs on real phones and a pilot with sellers in Borama.
 
 ## Screens
 
