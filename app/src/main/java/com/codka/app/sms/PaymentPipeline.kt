@@ -39,7 +39,8 @@ class PaymentPipeline(
         data class Fake(val id: Long, val reason: String) : Outcome
     }
 
-    suspend fun handle(smsBody: String, receivedAt: Long): Outcome {
+    /** [sender] is who the phone says sent the SMS: the fake check compares it. */
+    suspend fun handle(sender: String, smsBody: String, receivedAt: Long): Outcome {
         val payment = parser.parse(smsBody)
         if (payment == null) {
             if (!looksLikeMoneyReceived(smsBody)) return Outcome.Ignored
@@ -47,8 +48,7 @@ class PaymentPipeline(
             return Outcome.Unknown
         }
 
-        val lastBalance = settings.lastBalance(payment.provider, payment.currency)
-        val verdict = fakeCheck.check(payment, smsBody, lastBalance)
+        val verdict = fakeCheck.check(payment, sender)
         val fake = verdict as? FakeCheck.Verdict.Fake
         val saved =
             store.save(
