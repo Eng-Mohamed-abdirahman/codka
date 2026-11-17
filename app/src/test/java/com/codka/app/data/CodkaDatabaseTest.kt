@@ -161,4 +161,19 @@ class CodkaDatabaseTest {
         settings.setVolume(-3)
         assertEquals(0, settings.volume())
     }
+
+    @Test
+    fun paymentsOlderThan30DaysAreDeleted() = runTest {
+        val day = 24 * 3_600_000L
+        store.save(payment(), sms(1), morning)
+        // 29 days ago, just after midnight: the oldest day history still shows.
+        val oldestKept = PaymentStore.dayOf(morning - 29 * day, eat).first + 1
+        store.save(payment(), sms(2), oldestKept)
+        // One millisecond before that day starts: too old.
+        store.save(payment(), sms(3), oldestKept - 2)
+
+        assertEquals(1, store.deleteOld(morning, eat))
+        assertEquals(2, store.recent(now = morning, zone = eat).first().size)
+        assertEquals(0, store.deleteOld(morning, eat))
+    }
 }

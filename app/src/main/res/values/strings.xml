@@ -72,6 +72,12 @@
     <string name="health_battery">Kaydinta batteriga</string>
     <string name="health_volume">Mugga codka</string>
     <string name="health_autostart">Auto-start</string>
+    <string name="health_sms_on">SMS permission — on</string>
+    <string name="health_sms_off">SMS permission — off</string>
+    <string name="health_battery_ok">No restrictions</string>
+    <string name="health_battery_limited">Battery limits Codka — fix</string>
+    <string name="health_volume_detail">Media volume %1$d%%</string>
+    <string name="health_autostart_detail">Tecno · Infinix · itel: check it is on</string>
     <string name="fix">Hagaaji</string>
     <string name="restart_setup">Ku celi dejinta bilowga</string>
     <string name="about_line">Codka %1$s · Fariimaha: Zaad, eDahab · Wax walba waa offline</string>

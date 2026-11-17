@@ -84,26 +84,29 @@ fun HelperSettingsScreen(onBack: () -> Unit, onRestartSetup: () -> Unit, onOpenT
     ) {
         SubAppBar(stringResource(R.string.helper_title), onBack)
 
+        val smsDetail = if (smsOk) R.string.health_sms_on else R.string.health_sms_off
+        val batteryDetail =
+            if (batteryOk) R.string.health_battery_ok else R.string.health_battery_limited
         SectionLabel(stringResource(R.string.health_label))
         Group {
             HealthRow(
                 ok = smsOk,
                 title = stringResource(R.string.health_sms),
-                detail = if (smsOk) "SMS permission — on" else "SMS permission — off",
+                detail = stringResource(smsDetail),
                 onFix = { openAppSettings(context) }
             )
             Divider()
             HealthRow(
                 ok = batteryOk,
                 title = stringResource(R.string.health_battery),
-                detail = if (batteryOk) "No restrictions" else "Battery limits Codka — fix",
+                detail = stringResource(batteryDetail),
                 onFix = { BackgroundSetup.openBatterySetting(context) }
             )
             Divider()
             HealthRow(
                 ok = volume >= LOW_VOLUME_PERCENT,
                 title = stringResource(R.string.health_volume),
-                detail = "Media volume $volume%",
+                detail = stringResource(R.string.health_volume_detail, volume),
                 onFix = { raiseMediaVolume(context) }
             )
             if (BackgroundSetup.isTranssion()) {
@@ -112,7 +115,7 @@ fun HelperSettingsScreen(onBack: () -> Unit, onRestartSetup: () -> Unit, onOpenT
                 HealthRow(
                     ok = null,
                     title = stringResource(R.string.health_autostart),
-                    detail = "Tecno · Infinix · itel: check it is on",
+                    detail = stringResource(R.string.health_autostart_detail),
                     onFix = { BackgroundSetup.openAutoStartSetting(context) }
                 )
             }

@@ -23,6 +23,10 @@ interface PaymentDao {
     )
     fun between(from: Long, until: Long): Flow<List<PaymentEntity>>
 
+    /** Deletes payments received before [before]; returns how many. */
+    @Query("DELETE FROM payments WHERE received_at < :before")
+    suspend fun deleteBefore(before: Long): Int
+
     @Query("SELECT * FROM payments WHERE id = :id")
     suspend fun byId(id: Long): PaymentEntity?
 }
