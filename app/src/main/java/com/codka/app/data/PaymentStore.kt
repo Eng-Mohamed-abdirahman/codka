@@ -70,17 +70,30 @@ class PaymentStore(private val dao: PaymentDao) {
         now: Long = System.currentTimeMillis(),
         zone: TimeZone = TimeZone.getDefault()
     ): Flow<List<PaymentEntity>> {
-        val (todayStart, until) = dayOf(now, zone)
-        val from =
-            Calendar.getInstance(zone).apply {
-                timeInMillis = todayStart
-                add(Calendar.DAY_OF_MONTH, -(days - 1))
-            }.timeInMillis
-        return dao.between(from, until)
+        val (_, until) = dayOf(now, zone)
+        return dao.between(startOfRecent(days, now, zone), until)
+    }
+
+    /**
+     * Deletes payments older than the [KEEP_DAYS] days history shows, so the database doesn't
+     * grow forever on the seller's phone. Returns how many were deleted.
+     */
+    suspend fun deleteOld(
+        now: Long = System.currentTimeMillis(),
+        zone: TimeZone = TimeZone.getDefault()
+    ): Int = dao.deleteBefore(startOfRecent(KEEP_DAYS, now, zone))
+
+    /** Midnight at the start of the oldest of the last [days] days (today is one of them). */
+    private fun startOfRecent(days: Int, now: Long, zone: TimeZone): Long {
+        val (todayStart, _) = dayOf(now, zone)
+        return Calendar.getInstance(zone).apply {
+            timeInMillis = todayStart
+            add(Calendar.DAY_OF_MONTH, -(days - 1))
+        }.timeInMillis
     }
 
     companion object {
-        /** History shows (and later keeps) 30 days. */
+        /** History shows and keeps 30 days; older payments are deleted. */
         const val KEEP_DAYS = 30
 
         /** The start (midnight) and end (next midnight) of the day [now] falls in. */

@@ -8,7 +8,8 @@ import com.codka.app.voice.AnnounceRequest
 /**
  * Task 19: what happens to every SMS. Parse → check → save → speak.
  *
- *  - A payment is saved, its balance remembered, and it is spoken.
+ *  - A payment is saved, its balance remembered, and it is spoken. Payments older than
+ *    [PaymentStore.KEEP_DAYS] days are deleted then.
  *  - The same SMS again is not saved or spoken a second time.
  *  - A Zaad / eDahab "money received" SMS that can't be read says "Fariin aan la garanayn".
  *  - A payment the fake check doubts is saved as suspicious and the warning is spoken.
@@ -58,6 +59,8 @@ class PaymentPipeline(
                 isSuspicious = fake != null,
                 reason = fake?.reason
             )
+        // Each new payment is a good moment to drop the ones older than history keeps.
+        if (saved is PaymentStore.SaveResult.Saved) store.deleteOld(receivedAt)
         return when (saved) {
             PaymentStore.SaveResult.Duplicate -> Outcome.Duplicate
             PaymentStore.SaveResult.BadAmount -> {
