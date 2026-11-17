@@ -54,7 +54,35 @@ class PaymentStore(private val dao: PaymentDao) {
         return dao.between(from, until)
     }
 
+    /** Yesterday's payments, newest first. */
+    fun yesterday(
+        now: Long = System.currentTimeMillis(),
+        zone: TimeZone = TimeZone.getDefault()
+    ): Flow<List<PaymentEntity>> {
+        val (todayStart, _) = dayOf(now, zone)
+        val (from, _) = dayOf(todayStart - 1, zone)
+        return dao.between(from, todayStart)
+    }
+
+    /** The last [days] days including today, newest first. */
+    fun recent(
+        days: Int = KEEP_DAYS,
+        now: Long = System.currentTimeMillis(),
+        zone: TimeZone = TimeZone.getDefault()
+    ): Flow<List<PaymentEntity>> {
+        val (todayStart, until) = dayOf(now, zone)
+        val from =
+            Calendar.getInstance(zone).apply {
+                timeInMillis = todayStart
+                add(Calendar.DAY_OF_MONTH, -(days - 1))
+            }.timeInMillis
+        return dao.between(from, until)
+    }
+
     companion object {
+        /** History shows (and later keeps) 30 days. */
+        const val KEEP_DAYS = 30
+
         /** The start (midnight) and end (next midnight) of the day [now] falls in. */
         fun dayOf(now: Long, zone: TimeZone): Pair<Long, Long> {
             val start =

@@ -1,19 +1,22 @@
 package com.codka.app.ui.setup
 
 /**
- * Task 23: the one-time setup a helper does on the seller's phone, as plain logic so it can be
- * unit tested. The screen ([SetupScreen]) only draws the current step.
+ * Task 23: the one-time setup a helper does on the seller's phone (design boards 12, 16, 17),
+ * as plain logic so it can be unit tested. The screen ([SetupScreen]) only draws the current step.
  */
 object SetupFlow {
     enum class Step {
+        /** Ku soo dhawow: what Codka does, and that messages stay on the phone. */
+        WELCOME,
+
         /** Let Codka receive SMS. Without it nothing works, so it can't be skipped. */
         SMS,
 
-        /** Let Codka run in the background ("no battery restrictions"). */
+        /**
+         * Let Codka run in the background ("no restrictions"). On Tecno / Infinix / itel the same
+         * step also points to Phone Master's auto-start setting.
+         */
         BATTERY,
-
-        /** Tecno / Infinix / itel only: Phone Master > App Launch must allow Codka. */
-        AUTO_START,
 
         /** Play a test payment and check it can be heard. */
         VOICE
@@ -23,29 +26,25 @@ object SetupFlow {
     data class State(
         val smsAllowed: Boolean = false,
         val batteryUnrestricted: Boolean = false,
-        /** Android can't tell whether App Launch is on, so the helper confirms it. */
-        val autoStartConfirmed: Boolean = false,
         val voiceHeard: Boolean = false
     )
 
-    /** The steps for this phone: App Launch only exists on Transsion phones. */
-    fun steps(isTranssion: Boolean): List<Step> =
-        Step.entries.filter { it != Step.AUTO_START || isTranssion }
+    val steps: List<Step> = Step.entries
 
     fun isDone(step: Step, state: State): Boolean = when (step) {
+        Step.WELCOME -> true
         Step.SMS -> state.smsAllowed
         Step.BATTERY -> state.batteryUnrestricted
-        Step.AUTO_START -> state.autoStartConfirmed
         Step.VOICE -> state.voiceHeard
     }
 
     /**
-     * Whether "next" works yet. SMS and the voice test must really be done. Battery and
-     * App Launch can be skipped, because on some phones Android's screens don't report back,
-     * but the screen asks twice by not marking them done.
+     * Whether the helper may go on. SMS and the voice test must really be done. The battery step
+     * can be passed with "Waan sameeyay" (I did it), because on some phones Android's screens
+     * don't report back.
      */
     fun canContinue(step: Step, state: State): Boolean = when (step) {
+        Step.WELCOME, Step.BATTERY -> true
         Step.SMS, Step.VOICE -> isDone(step, state)
-        Step.BATTERY, Step.AUTO_START -> true
     }
 }
