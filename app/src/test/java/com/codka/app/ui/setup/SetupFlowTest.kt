@@ -9,12 +9,13 @@ import org.junit.jupiter.api.Test
 
 class SetupFlowTest {
     @Test
-    fun `App Launch is a step only on Tecno, Infinix and itel`() {
-        assertEquals(
-            listOf(Step.SMS, Step.BATTERY, Step.AUTO_START, Step.VOICE),
-            SetupFlow.steps(true)
-        )
-        assertEquals(listOf(Step.SMS, Step.BATTERY, Step.VOICE), SetupFlow.steps(false))
+    fun `four steps in the design's order`() {
+        assertEquals(listOf(Step.WELCOME, Step.SMS, Step.BATTERY, Step.VOICE), SetupFlow.steps)
+    }
+
+    @Test
+    fun `welcome can always go on`() {
+        assertTrue(SetupFlow.canContinue(Step.WELCOME, State()))
     }
 
     @Test
@@ -30,13 +31,9 @@ class SetupFlowTest {
     }
 
     @Test
-    fun `battery and App Launch can be skipped but are not marked done`() {
+    fun `battery can be passed but is only done when unrestricted`() {
         assertTrue(SetupFlow.canContinue(Step.BATTERY, State()))
         assertFalse(SetupFlow.isDone(Step.BATTERY, State()))
         assertTrue(SetupFlow.isDone(Step.BATTERY, State(batteryUnrestricted = true)))
-
-        assertTrue(SetupFlow.canContinue(Step.AUTO_START, State()))
-        assertFalse(SetupFlow.isDone(Step.AUTO_START, State()))
-        assertTrue(SetupFlow.isDone(Step.AUTO_START, State(autoStartConfirmed = true)))
     }
 }

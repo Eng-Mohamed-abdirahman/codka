@@ -2,38 +2,80 @@
 <resources>
     <!-- Somali is the default language. All UI text lives here, never hard-coded. -->
     <string name="app_name">Codka</string>
-    <string name="home_ready">Codka waa diyaar.</string>
+    <!-- Words from the Codka design canvas (boards 07–19). Native-speaker check pending. -->
 
-    <!-- Task 20: home screen. Short words only: the colours and icons carry the meaning. -->
-    <string name="no_payment_yet">Weli lacag ma iman</string>
+    <!-- Home (board 17) -->
+    <string name="status_ready">Diyaar</string>
+    <string name="status_broken">Ma shaqeynayo</string>
+    <string name="open_helper">Dejinta caawiyaha</string>
+    <string name="listening">Waan dhegeysanayaa…</string>
+    <string name="no_new_money">Lacag cusub weli ma iman.</string>
+    <string name="no_new_money_last">Lacag cusub weli ma iman. Lacagta ugu dambeysay:</string>
+    <string name="money_arrived">Lacag ayaa kuu timid</string>
+    <string name="suspicious_title">Digniin: been abuur</string>
     <string name="say_again">Ku celi</string>
-    <string name="suspicious">Digniin</string>
-    <string name="today_total">Maanta: %1$s</string>
-    <string name="today_none">Maanta lacag ma iman</string>
-    <string name="open_helper">Caawiyaha</string>
+    <string name="speaking">Wuu hadlayaa</string>
+    <string name="tap_to_hear_again">Riix si aad mar kale u maqasho</string>
+    <string name="tap_to_stop">Riix si aad u joojiso</string>
+    <string name="no_money_yet">Lacag weli ma jirto</string>
     <string name="back">Dib u noqo</string>
 
-    <string name="sms_not_allowed">SMS lama oggola. Taabo si loo hagaajiyo.</string>
+    <!-- Navigation (board 07) -->
+    <string name="tab_home">Guriga</string>
+    <string name="tab_history">Taariikhda</string>
 
-    <!-- Task 23: setup flow for the helper. Short, one idea per step. -->
-    <string name="setup_step">Tallaabo %1$d / %2$d</string>
-    <string name="setup_sms_title">U oggolow Codka inuu helo fariimaha lacagta</string>
+    <!-- History (boards 10 and 18) -->
+    <string name="period_today">Maanta</string>
+    <string name="period_yesterday">Shalay</string>
+    <string name="period_all">Dhammaan</string>
+    <string name="count_payments">%1$d lacag</string>
+    <string name="fake_label">Been abuur</string>
+    <string name="play">Dhagayso</string>
+    <string name="play_warning">Dhagayso digniinta</string>
+    <string name="empty_today">Maanta lacag weli kuma iman</string>
+    <string name="empty_yesterday">Shalay lacag kuma iman</string>
+    <string name="empty_all">Lacag weli kuma iman</string>
+    <string name="empty_hint">Marka lacag timaado, halkan ayay ka muuqan doontaa.</string>
+
+    <!-- Setup (boards 12, 16, 17) -->
+    <string name="setup_step">Tallaabada %1$d ee %2$d</string>
+    <string name="welcome_title">Ku soo dhawow</string>
+    <string name="welcome_body">Codka wuxuu kuu akhriyaa lacagta kuu timaada Zaad iyo eDahab.</string>
+    <string name="private_note">Fariimahaagu taleefanka kama baxaan.</string>
+    <string name="setup_start">Bilow</string>
+    <string name="setup_sms_title">U oggolow Codka inuu akhriyo fariimaha lacagta</string>
+    <string name="setup_sms_body">Codka wuxuu eegaa oo kaliya fariimaha Zaad iyo eDahab. Fariimahaagu taleefanka ayay ku jiraan, cidna looma diro.</string>
+    <string name="setup_no_internet">Ma u baahna internet</string>
     <string name="setup_sms_button">Oggolow</string>
-    <string name="setup_open_settings">Ka fur Settings</string>
-    <string name="setup_battery_title">U oggolow Codka inuu shaqeeyo marka uu xiran yahay</string>
-    <string name="setup_autostart_title">Phone Master › App Launch: shid Codka</string>
-    <string name="setup_autostart_confirm">Waan shiday</string>
-    <string name="setup_voice_title">Tijaabi codka. Ma maqashay?</string>
-    <string name="setup_voice_button">Dhegeyso tijaabada</string>
+    <string name="setup_sms_done">Waa la oggolaaday</string>
+    <string name="setup_sms_done_body">Codka hadda wuu arki karaa fariimaha lacagta.</string>
+    <string name="setup_sms_refused">Codka ma shaqeyn karo oggolaansho la’aan</string>
+    <string name="setup_sms_refused_body">Fur dejinta, dooro “SMS”, kadibna “Oggolow”.</string>
+    <string name="setup_open_settings">Fur dejinta</string>
+    <string name="setup_next">Sii wad</string>
+    <string name="setup_battery_title">Ha u oggolaan taleefanka inuu Codka xiro</string>
+    <string name="setup_battery_done">Batteriga waa diyaar</string>
+    <string name="setup_battery_body">Taleefannada qaar waxay xiraan apps-ka si batteriga loo kaydiyo. Dooro “Ha xadidin” (No restrictions).</string>
+    <string name="setup_autostart_tip">Also turn on “Auto-start” for Codka in Phone Master.</string>
+    <string name="setup_did_it">Waan sameeyay</string>
+    <string name="setup_voice_title">Tijaabi codka</string>
+    <string name="setup_voice_body">Codka wuxuu dhihi doonaa: “Lacag ayaa kuu timid: toban doolar…”</string>
+    <string name="setup_voice_question">Ma maqashay?</string>
     <string name="setup_voice_heard">Haa, waan maqlay</string>
-    <string name="setup_next">Xiga</string>
-    <string name="setup_skip">Ka bood</string>
-    <string name="setup_finish">Dhammaad</string>
-    <string name="setup_tools">Qalabka tijaabada</string>
+    <string name="setup_voice_no">Maya</string>
+    <string name="setup_voice_not_heard">Kor u qaad mugga codka (media volume), kadibna mar kale dhagayso.</string>
 
-    <!-- Task 21: history -->
-    <string name="history_title">Lacagaha maanta</string>
-    <string name="play">Dhegeyso</string>
+    <!-- Helper settings (boards 14 and 18) -->
+    <string name="helper_title">Dejinta caawiyaha</string>
+    <string name="health_label">Xaaladda · Health check</string>
+    <string name="health_sms">Oggolaanshaha SMS</string>
+    <string name="health_battery">Kaydinta batteriga</string>
+    <string name="health_volume">Mugga codka</string>
+    <string name="health_autostart">Auto-start</string>
+    <string name="fix">Hagaaji</string>
+    <string name="restart_setup">Ku celi dejinta bilowga</string>
+    <string name="about_line">Codka %1$s · Fariimaha: Zaad, eDahab · Wax walba waa offline</string>
+    <string name="setup_tools">Qalabka tijaabada</string>
 
     <!-- Task 07 spike screen (temporary) -->
     <string name="spike_title">Tijaabada SMS</string>

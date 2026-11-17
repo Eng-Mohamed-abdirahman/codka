@@ -31,13 +31,31 @@ class AmountTextTest {
     @CsvSource(
         "USD, 4525, '$45.25'",
         "USD, 705, '$7.05'",
-        "USD, 200000, '$2,000'",
+        "USD, 500, '$5.00'",
+        "USD, 200000, '$2,000.00'",
         "USD, 50, '$0.50'",
-        "SLSH, 125000000, 'SLSH 1,250,000'",
-        "SLSH, 3125080, 'SLSH 31,250.80'"
+        "SLSH, 2550000, '25,500 SLSH'",
+        "SLSH, 125000000, '1,250,000 SLSH'",
+        "SLSH, 3125080, '31,250.80 SLSH'"
     )
-    fun `amounts are written with thousands commas`(currency: Currency, minor: Long, text: String) {
+    fun `amounts are written as the design says`(currency: Currency, minor: Long, text: String) {
         assertEquals(text, AmountText.format(currency, minor))
+    }
+
+    @Test
+    fun `the big amount is the number alone`() {
+        assertEquals("10.50", AmountText.number(payment(1050)))
+        assertEquals("25,500", AmountText.number(payment(2550000, Currency.SLSH)))
+    }
+
+    @Test
+    fun `sender shows as the last 4 digits and a short name`() {
+        assertEquals("…4521", AmountText.lastDigits("633004521"))
+        assertEquals("…4521", AmountText.lastDigits("+252 63 300 4521"))
+        assertNull(AmountText.lastDigits("12"))
+        assertEquals("Axmed C.", AmountText.shortName("AXMED CALI FAARAX"))
+        assertEquals("Hodan", AmountText.shortName("hodan"))
+        assertNull(AmountText.shortName("  "))
     }
 
     @Test
@@ -47,24 +65,6 @@ class AmountTextTest {
             "09:05",
             AmountText.time(1_794_636_300_000L, TimeZone.getTimeZone("Africa/Mogadishu"))
         )
-    }
-
-    @Test
-    fun `totals add up each currency and leave out suspicious payments`() {
-        val today =
-            listOf(
-                payment(4525),
-                payment(12000),
-                payment(99900, suspicious = true),
-                payment(2500000, Currency.SLSH)
-            )
-        assertEquals("$165.25 · SLSH 25,000", AmountText.totals(today))
-    }
-
-    @Test
-    fun `no real payments means no total`() {
-        assertNull(AmountText.totals(emptyList()))
-        assertNull(AmountText.totals(listOf(payment(500, suspicious = true))))
     }
 
     @Test
