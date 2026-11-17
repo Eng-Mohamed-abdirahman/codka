@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.map
 class Settings(private val dao: SettingsDao) {
     /**
      * The last balance an SMS showed for this account, exactly as written ("150.0049").
-     * The fake-SMS check (task 13) compares new payments with it.
+     * Kept for a stricter fake-SMS check later (new balance = last balance + amount); the
+     * current check (task 13) doesn't use it, because spending lowers the balance in between.
      */
     suspend fun lastBalance(provider: Provider, currency: Currency): String? =
         dao.get(balanceKey(provider, currency))

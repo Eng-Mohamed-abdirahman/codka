@@ -44,8 +44,15 @@ class PaymentPipelineTest {
             .orEmpty()
             .sortedBy { it.name }
 
-    private fun pipeline(fakeCheck: FakeCheck = FakeCheck.NONE) =
+    private fun pipeline(fakeCheck: FakeCheck = FakeCheck.RULES) =
         PaymentPipeline(parser, store, settings, fakeCheck) { spoken += it }
+
+    /** The official sender of the account the SMS is for, as a real SMS would have. */
+    private fun senderOf(body: String): String =
+        parser.parse(body)?.let { FakeCheck.officialSender(it.provider, it.currency) } ?: "222"
+
+    private suspend fun PaymentPipeline.handle(body: String, receivedAt: Long) =
+        handle(senderOf(body), body, receivedAt)
 
     @Before
     fun open() {
@@ -134,20 +141,33 @@ class PaymentPipelineTest {
     }
 
     @Test
-    fun aFakePaymentIsSavedAsSuspiciousAndTheWarningIsSpoken() = runTest {
+    fun aPaymentSmsFromAPhoneNumberIsSavedAsFakeAndTheWarningIsSpoken() = runTest {
         settings.setLastBalance(Provider.ZAAD, Currency.USD, "30")
-        val fakeCheck =
-            FakeCheck { _, _, last -> FakeCheck.Verdict.Fake("balance did not go up from $last") }
 
-        val outcome = pipeline(fakeCheck).handle(sample("zaad-usd-001.txt"), now)
+        val outcome = pipeline().handle("+252634000000", sample("zaad-usd-001.txt"), now)
 
         assertTrue(outcome is PaymentPipeline.Outcome.Fake)
         assertEquals(listOf<AnnounceRequest>(AnnounceRequest.Fake), spoken)
         val saved = db.payments().byId((outcome as PaymentPipeline.Outcome.Fake).id)!!
         assertTrue(saved.isSuspicious)
-        assertEquals("balance did not go up from 30", saved.reason)
+        assertEquals(FakeCheck.WRONG_SENDER, saved.reason)
         // The made-up balance of a fake SMS must not replace the real one.
         assertEquals("30", settings.lastBalance(Provider.ZAAD, Currency.USD))
+    }
+
+    @Test
+    fun aBalanceSmallerThanTheAmountIsFake() = runTest {
+        // Real wording and sender, but $120 received leaves only $50: impossible.
+        val sms = sample("zaad-usd-001.txt").replace("\$150.0049", "\$50.0049")
+
+        val outcome = pipeline().handle("898", sms, now)
+
+        assertTrue(outcome is PaymentPipeline.Outcome.Fake)
+        assertEquals(
+            FakeCheck.BALANCE_BELOW_AMOUNT,
+            (outcome as PaymentPipeline.Outcome.Fake).reason
+        )
+        assertEquals(listOf<AnnounceRequest>(AnnounceRequest.Fake), spoken)
     }
 
     @Test

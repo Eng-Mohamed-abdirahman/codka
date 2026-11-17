@@ -20,7 +20,7 @@ The screens follow the Codka design system (Saffron and Indigo, Baloo 2 and Atki
 - **Saves every payment**, so it can be replayed. The same SMS is never saved or spoken twice.
 - **Says *"Fariin aan la garanayn"*** (unknown message) for a Zaad / eDahab payment SMS it can't read, instead of guessing.
 - **Ignores every other SMS**, and keeps nothing about them.
-- *Planned:* a warning for fake payment SMS, checked against the real sender and the balance.
+- **Warns about fake payment SMS**: if a payment SMS doesn't come from the official sender (222 / 898 for Zaad, eDahab-SHL / eDahab-USD for eDahab), or its new balance is smaller than the money received, Codka says the warning instead of the amount and the payment shows in red.
 
 Everything runs **on the phone**: no internet, no account, no server.
 

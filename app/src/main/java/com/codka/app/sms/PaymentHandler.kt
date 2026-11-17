@@ -32,7 +32,7 @@ object PaymentHandler {
                 parser = AppParser.get(app),
                 store = PaymentStore(db.payments()),
                 settings = Settings(db.settings()),
-                fakeCheck = FakeCheck.NONE,
+                fakeCheck = FakeCheck.RULES,
                 // The announcer lives on the main thread.
                 speak = { request ->
                     withContext(Dispatchers.Main) { AnnouncerService.announce(app, request) }
@@ -46,7 +46,7 @@ object PaymentHandler {
         val app = context.applicationContext
         scope.launch {
             try {
-                val outcome = pipeline(app).handle(sms.body, receivedAt)
+                val outcome = pipeline(app).handle(sms.sender, sms.body, receivedAt)
                 if (outcome != PaymentPipeline.Outcome.Ignored) {
                     // No amount, name or number in the log: the outcome is enough to check it worked.
                     val delay = receivedAt - sms.sentAtMillis
