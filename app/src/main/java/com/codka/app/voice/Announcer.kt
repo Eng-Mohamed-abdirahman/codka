@@ -13,6 +13,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Plays announcements one after another (task 18). Main thread only.
@@ -28,6 +29,9 @@ class Announcer(context: Context) {
     private val queue = ArrayDeque<AnnounceRequest>()
     private var busy = false
 
+    /** Ends what is playing now; null when nothing plays. */
+    private var stopCurrent: (() -> Unit)? = null
+
     /** Called on the main thread when the queue is empty again. */
     var onIdle: (() -> Unit)? = null
 
@@ -40,11 +44,19 @@ class Announcer(context: Context) {
         val request = queue.removeFirstOrNull()
         if (request == null) {
             busy = false
+            speaking.value = false
             onIdle?.invoke()
             return
         }
         busy = true
+        speaking.value = true
         play(Announcement.build(request))
+    }
+
+    /** Stops speaking now and drops anything still waiting ("Ku celi" tapped while speaking). */
+    fun stop() {
+        queue.clear()
+        stopCurrent?.invoke()
     }
 
     private fun play(clips: List<String>) {
@@ -65,6 +77,7 @@ class Announcer(context: Context) {
         fun end() {
             if (ended) return
             ended = true
+            stopCurrent = null
             Log.i(TAG, "Announcement done")
             main.removeCallbacksAndMessages(player)
             player.release()
@@ -91,6 +104,7 @@ class Announcer(context: Context) {
             }
             main.postAtTime(::watchdog, player, now + CHECK_MS)
         }
+        stopCurrent = { end() }
         player.addListener(
             object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
@@ -140,11 +154,14 @@ class Announcer(context: Context) {
         }
     }
 
-    private companion object {
-        const val TAG = "Codka"
+    companion object {
+        private const val TAG = "Codka"
+
+        /** True while any announcer is speaking: the home screen's "Ku celi" button shows it. */
+        val speaking = MutableStateFlow(false)
 
         /** No playback progress for this long means it is stuck. */
-        const val STUCK_MS = 30_000L
-        const val CHECK_MS = 2_000L
+        private const val STUCK_MS = 30_000L
+        private const val CHECK_MS = 2_000L
     }
 }

@@ -27,6 +27,12 @@ class AnnouncerService : Service() {
     override fun onCreate() {
         super.onCreate()
         announcer = Announcer(this).apply { onIdle = { stopSelf() } }
+        running = announcer
+    }
+
+    override fun onDestroy() {
+        if (running === announcer) running = null
+        super.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -82,6 +88,15 @@ class AnnouncerService : Service() {
 
         /** Used when Android refuses to start the service: speak anyway, without its protection. */
         private var fallback: Announcer? = null
+
+        /** The service's announcer while the service runs (main thread only). */
+        private var running: Announcer? = null
+
+        /** Stops whatever Codka is saying right now. Main thread. */
+        fun stop() {
+            running?.stop()
+            fallback?.stop()
+        }
 
         /** Speaks [request] (twice). Safe to call from the main thread of any component. */
         fun announce(context: Context, request: AnnounceRequest) {
